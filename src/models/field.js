@@ -1,13 +1,17 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const field = sequelize.define('field', {
-    IdField: DataTypes.INTEGER,
+  const Field = sequelize.define('Field', {
+    IdField: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     FieldName: DataTypes.STRING,
     Complex: DataTypes.INTEGER,
     Status: DataTypes.BOOLEAN
   }, {});
-  field.associate = function(models) {
+  Field.associate = function(models) {
     // associations can be defined here
+    Field.belongsTo(models.Complex, { as: 'Complex Detail',foreignKey: 'Complex' });
   };
-  return field;
+  return Field;
 };

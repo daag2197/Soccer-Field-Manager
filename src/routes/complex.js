@@ -5,11 +5,11 @@ const Routes = express.Router();
 
 Routes.get('/test',Complex.test);
 
-Routes.post('/Create',Complex.create);
+Routes.post('/create',Complex.create);
 
-Routes.get('/Findall',Complex.findAll);
+Routes.get('/findall',Complex.findAll);
 
-Routes.get('/Findone',Complex.findOne);
+Routes.get('/findone',Complex.findOne);
 
 Routes.put('/update',Complex.update);
 

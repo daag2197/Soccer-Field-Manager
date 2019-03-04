@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const league = sequelize.define('league', {
+  const League = sequelize.define('League', {
     IdLeague: DataTypes.INTEGER,
     LeagueName: DataTypes.STRING,
     StartDate: DataTypes.DATE,
@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     GameDay: DataTypes.INTEGER,
     Status: DataTypes.BOOLEAN
   }, {});
-  league.associate = function(models) {
+  League.associate = function(models) {
     // associations can be defined here
   };
-  return league;
+  return League;
 };

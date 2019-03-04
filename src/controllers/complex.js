@@ -27,6 +27,9 @@ exports.create = function (req, res) {
 
 exports.findAll = (req,res) => {
     Complex.findAll({
+        attributes: {
+            exclude: ['createdAt', 'updatedAt', 'Status']
+        },
         where: {
             Status: 1
         }
@@ -44,7 +47,15 @@ exports.findOne = (req,res) => {
 
     let IdComplex = req.body.IdComplex;
     
-    Complex.findByPk(IdComplex).then(complex => {
+    Complex.findOne({
+        attributes:{
+            exclude: ['createdAt', 'updatedAt', 'Status']
+        },
+        where: {
+            IdComplex: IdComplex,
+            Status: 1
+        }
+    }).then(complex => {
         if(!complex){
             return res.status(404).send({
               message: `Not found. Complex with id ${IdComplex}`
@@ -65,7 +76,7 @@ exports.update = (req,res) => {
         if(!complex){
             return res.status(404).send({
                 message: `Not found. Complex with id ${IdComplex}`
-            })
+            });
         }
         return Complex.update(
         {
@@ -86,7 +97,7 @@ exports.update = (req,res) => {
         });
     }).catch(err => {
         return res.status(500).send({
-            message: "Error updating product with id " + req.body.IdComplex
+            message: "Error updating complex with id " + req.body.IdComplex
         });
     });
 }
