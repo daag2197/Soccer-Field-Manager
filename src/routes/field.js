@@ -13,4 +13,8 @@ Routes.get('/findone',Field.findOne);
 
 Routes.put('/update',Field.update);
 
+Routes.put('/delete',Field.delete);
+
+Routes.put('/recovery',Field.recovery);
+
 module.exports = Routes;

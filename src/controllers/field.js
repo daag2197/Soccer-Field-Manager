@@ -32,7 +32,7 @@ exports.findAll = (req,res) => {
             }
         }],
         attributes: {
-            exclude: ['Complex', 'Status', 'createdAt', 'updatedAt']
+            exclude: ['Complex', 'Status']
         },
         where: {
             Status: 1
@@ -58,7 +58,7 @@ exports.findOne = (req,res) => {
             }
         }],
         attributes: {
-            exclude: ['Complex','Status','createdAt', 'updatedAt']
+            exclude: ['Complex','Status']
         },
         where: {
             IdField: IdField,
@@ -81,7 +81,12 @@ exports.findOne = (req,res) => {
 exports.update = (req,res) => {
     let IdField = req.body.IdField;
 
-    Field.findByPk(IdField).then(field => {
+    Field.findOne({
+        where: {
+            IdField: IdField,
+            Status: '1'
+        }
+    }).then(field => {
         if(!field){
             return res.status(404).send({
                 message: `Not found. Field with id ${IdField}`
@@ -104,7 +109,71 @@ exports.update = (req,res) => {
         });
     }).catch(err => {
         return res.status(500).send({
-            message: "Error updating field with id " + req.body.IdField
+            message: err.message || "Error updating field with id " + req.body.IdField
         });
     });
+}
+
+exports.delete = (req,res) => {
+    let IdField = req.body.IdField;
+    Field.findOne({
+        where: {
+            IdField: IdField,
+            Status: '1'
+        }
+    }).then(field =>{
+        if(!field){
+            return res.status(404).send({
+                message: `Not found. Field with id ${IdField}`
+            })
+        }
+        return Field.update({
+            Status: 0
+        },
+        {
+            where: {
+                IdField: IdField
+            }
+        });
+    }).then(result => {
+        res.send({
+            message: `Remmove with id ${IdField}`
+        })
+    }).catch(err => {
+        return res.status(500).send({
+            message: err.message || "Error removing field with id " + req.body.IdField
+        });
+    })
+}
+
+exports.recovery = (req,res) => {
+    let IdField = req.body.IdField;
+    Field.findOne({
+        where: {
+            IdField: IdField,
+            Status: '0'
+        }
+    }).then(field =>{
+        if(!field){
+            return res.status(404).send({
+                message: `Not found. Field with id ${IdField}`
+            })
+        }
+        return Field.update({
+            Status: 1
+        },
+        {
+            where: {
+                IdField: IdField
+            }
+        });
+    }).then(result => {
+        res.send({
+            message: `Recover with id ${IdField}`
+        })
+    }).catch(err => {
+        return res.status(500).send({
+            message: err.message || "Error recovering field with id " + req.body.IdField
+        });
+    })
 }

@@ -28,7 +28,7 @@ exports.create = function (req, res) {
 exports.findAll = (req,res) => {
     Complex.findAll({
         attributes: {
-            exclude: ['createdAt', 'updatedAt', 'Status']
+            exclude: ['Status']
         },
         where: {
             Status: 1
@@ -49,7 +49,7 @@ exports.findOne = (req,res) => {
     
     Complex.findOne({
         attributes:{
-            exclude: ['createdAt', 'updatedAt', 'Status']
+            exclude: ['Status']
         },
         where: {
             IdComplex: IdComplex,
@@ -72,7 +72,12 @@ exports.findOne = (req,res) => {
 exports.update = (req,res) => {
 
     let IdComplex = req.body.IdComplex;
-    Complex.findByPk(IdComplex).then(complex => {
+    Complex.findOne({
+        where: {
+            IdComplex: IdComplex,
+            status: '1'
+        }
+    }).then(complex => {
         if(!complex){
             return res.status(404).send({
                 message: `Not found. Complex with id ${IdComplex}`
@@ -105,7 +110,12 @@ exports.update = (req,res) => {
 exports.delete = (req,res) => {
 
     let IdComplex = req.body.IdComplex;
-    Complex.findByPk(IdComplex).then(complex => {
+    Complex.findOne({
+        where: {
+            IdComplex: IdComplex,
+            Status: '1'
+        }
+    }).then(complex => {
         if(!complex){
             return res.status(404).send({
                 message: `Not found. Complex with id ${IdComplex}`
@@ -117,7 +127,7 @@ exports.delete = (req,res) => {
         },
         {
             where: {
-                IdComplex: req.body.IdComplex 
+                IdComplex: IdComplex 
             }
         });
     }).then(result => {
@@ -126,7 +136,7 @@ exports.delete = (req,res) => {
         });
     }).catch(err => {
         return res.status(500).send({
-            message: "Error removing product with id " + req.body.IdComplex
+            message: "Error removing complex with id " + req.body.IdComplex
         });
     });
 }
@@ -134,7 +144,12 @@ exports.delete = (req,res) => {
 exports.recovery = (req,res) => {
 
     let IdComplex = req.body.IdComplex;
-    Complex.findByPk(IdComplex).then(complex => {
+    Complex.findOne({
+        where: {
+            IdComplex: IdComplex,
+            Status: '0'
+        }
+    }).then(complex => {
         if(!complex){
             return res.status(404).send({
                 message: `Not found. Complex with id ${IdComplex}`
@@ -155,7 +170,7 @@ exports.recovery = (req,res) => {
         });
     }).catch(err => {
         return res.status(500).send({
-            message: "Error recovering product with id " + req.body.IdComplex
+            message: "Error recovering Complex with id " + req.body.IdComplex
         });
     });
 }
