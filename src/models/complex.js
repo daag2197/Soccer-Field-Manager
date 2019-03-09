@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Complex.associate = function(models) {
     // associations can be defined here
     Complex.hasMany(models.Field, {foreignKey: 'Complex'});
+    Complex.hasMany(models.League, { foreignKey: 'Complex' });
   };
   return Complex;
 };

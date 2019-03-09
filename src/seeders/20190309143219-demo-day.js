@@ -2,15 +2,14 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-      return queryInterface.bulkInsert('fields', [{
-        FieldName: 'Cancha 1',
-        Complex: '1',
+      return queryInterface.bulkInsert('days', [{
+        Days: 'Lunes',
         createdAt: '2019-03-04 04:56:55',
         updatedAt: '2019-03-04 04:56:55'
       }], {});
   },
 
   down: (queryInterface, Sequelize) => {
-      return queryInterface.bulkDelete('fields', null, {});
+      return queryInterface.bulkDelete('days', null, {});
   }
 };
