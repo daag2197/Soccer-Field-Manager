@@ -6,6 +6,9 @@ const router = Router();
 const ComplexRoute = require('./Complex');
 const FieldRoute = require('./Field')
 const DayRoute = require('./Day');
+const LeagueRoute = require('./League');
+const TeamRoute = require('./Team');
+
 router.get('/', (req, res) => {
   res.send('Bienvenido a Inicio!');
 });
@@ -15,5 +18,7 @@ router.get('/', (req, res) => {
 router.use('/complex',ComplexRoute);
 router.use('/field', FieldRoute);
 router.use('/day',DayRoute);
+router.use('/league',LeagueRoute);
+router.use('/team',TeamRoute);
 
 module.exports = router;
