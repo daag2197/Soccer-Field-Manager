@@ -6,15 +6,15 @@ const passport = require('passport')
 const cors = require('cors')
 const router = require('./src/routes');
 
-//Ajustes de Puerto para servidor local
+// Ajustes de Puerto para servidor local
 app.set('port',process.env.PORT || 3000)
-//Respuesta en Consola
+// Respuesta en Consola
 app.use(Morgan('dev'));
-//Midlewares
+// Midlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
-//Rutas de las diferentes tablas
+// Rutas de las diferentes tablas
 app.use(router);
 
 app.listen(app.get('port'),() => {
