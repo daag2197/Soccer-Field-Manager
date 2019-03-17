@@ -1,8 +1,20 @@
 const express = require("express");
-const League = require("../controllers/league");
+const Team = require("../controllers/Team");
 
 const Routes = express.Router();
 
-Routes.get('/test', League.test);
+Routes.get('/test', Team.test);
+
+Routes.post('/create',Team.create);
+
+Routes.get('/findall',Team.findAll);
+
+Routes.get('/findone',Team.findOne);
+
+Routes.put('/update',Team.update);
+
+Routes.put('/delete',Team.delete);
+
+Routes.put('/recovery',Team.recovery);
 
 module.exports = Routes;

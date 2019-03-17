@@ -8,6 +8,7 @@ const FieldRoute = require('./Field')
 const DayRoute = require('./Day');
 const LeagueRoute = require('./League');
 const TeamRoute = require('./Team');
+const UserTypeRoute = require('./usertype');
 
 router.get('/', (req, res) => {
   res.send('Bienvenido a Inicio!');
@@ -20,5 +21,6 @@ router.use('/field', FieldRoute);
 router.use('/day',DayRoute);
 router.use('/league',LeagueRoute);
 router.use('/team',TeamRoute);
+router.use('/usertype',UserTypeRoute);
 
 module.exports = router;
