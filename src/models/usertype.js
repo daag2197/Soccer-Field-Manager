@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   UserType.associate = function(models) {
     // associations can be defined here
+    UserType.hasMany(models.User, { foreignKey: "UserType" });
   };
   return UserType;
 };

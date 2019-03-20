@@ -1,0 +1,20 @@
+const express = require("express");
+const User = require("../controllers/user");
+
+const Routes = express.Router();
+
+Routes.get('/test', User.test);
+
+Routes.post('/create', User.create);
+
+Routes.get('/findall', User.findAll);
+
+/*Routes.get('/findone', UserType.findOne);
+
+Routes.put('/update', UserType.update);
+
+Routes.put('/delete', UserType.delete);
+
+Routes.put('/recovery', UserType.recovery);*/
+
+module.exports = Routes;
