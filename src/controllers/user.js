@@ -29,26 +29,54 @@ exports.create = function (req, res) {
 };
 
 exports.findAll = function (req, res) {
-    User.findAll({
+  User.findAll({
+    attributes: {
+      exclude: ["Status", "Password", "UserType"]
+    },
+    include: [{
+      model: models.UserType,
+      as: "User Type",
       attributes: {
-        exclude: ["Status", "Password", "UserType"]
-      },
-      include: [
-        {
-          model: models.UserType,
-          as: "User Type",
-          attributes: {
-            exclude: ["createdAt", "updatedAt", "Status"]
-          }
-        }
-      ]
-    })
-      .then(user => {
-        res.send({ user });
-      })
-      .catch(err => {
-        res.status(400).send({
-          message: err.message || "cannot retrive."
-        });
-      });
+        exclude: ["createdAt", "updatedAt", "Status"]
+      }
+    }],
+    where: {
+      Status: '1'
+    }
+  })
+  .then(user => {
+    res.send({ user });
+  })
+  .catch(err => {
+    res.status(400).send({
+      message: err.message || "cannot retrive."
+    });
+  });
 };
+exports.findOne = function(req,res){
+  let IdUser = req.body.IdUser;
+  User.findOne({
+    attributes: {
+      exclude: ["Status", "Password", "UserType"]
+    },
+    include: [{
+      model: models.UserType,
+      as: "User Type",
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "Status"]
+      }
+    }],
+    where: {
+      IdUser: IdUser,
+      Status: '1'
+    }
+  })
+  .then(user => {
+    res.send({ user });
+  })
+  .catch(err => {
+    res.status(400).send({
+      message: err.message || "cannot retrive."
+    });
+  });
+}

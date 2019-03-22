@@ -9,8 +9,8 @@ Routes.post('/create', User.create);
 
 Routes.get('/findall', User.findAll);
 
-/*Routes.get('/findone', UserType.findOne);
-
+Routes.get('/findone', User.findOne);
+/*
 Routes.put('/update', UserType.update);
 
 Routes.put('/delete', UserType.delete);
