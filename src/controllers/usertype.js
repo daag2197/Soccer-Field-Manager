@@ -79,7 +79,7 @@ exports.update = function(req,res) {
         });
     }).catch(err => {
         return res.status(500).send({
-            message: err.message || "Error updating user type with id " + IdTeam
+            message: err.message || "Error updating user type with id " + IdUserType
         });
     });
 }

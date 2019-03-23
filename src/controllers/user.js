@@ -53,6 +53,7 @@ exports.findAll = function (req, res) {
     });
   });
 };
+
 exports.findOne = function(req,res){
   let IdUser = req.body.IdUser;
   User.findOne({
@@ -77,6 +78,45 @@ exports.findOne = function(req,res){
   .catch(err => {
     res.status(400).send({
       message: err.message || "cannot retrive."
+    });
+  });
+}
+
+exports.update = function(req,res){
+  let IdUser = req.body.IdUser;
+  User.findOne({
+    where: {
+      IdUser: IdUser,
+      Status: 1
+    }
+  }).then(user => {
+    if (!user) {
+      return res.status(404).send({
+        message: `Not Found. user with id ${IdUser}`
+      });
+    }
+    return User.update({
+      FirstName: req.body.FirstName,
+      LastName: req.body.LastName,
+      SecondLastName: req.body.SecondLastName,
+      Email: req.body.Email,
+      Password: req.body.Password,
+      UserType: req.body.UserType,
+      Path: req.body.Path
+    },
+      {
+        where: {
+          IdUser: IdUser,
+          Status: '1'
+        }
+      });
+  }).then(result => {
+    res.send({
+      message: `Update Correct with id ${IdUserType}`
+    });
+  }).catch(err => {
+    return res.status(500).send({
+      message: err.message || "Error updating user with id " + IdUser
     });
   });
 }
