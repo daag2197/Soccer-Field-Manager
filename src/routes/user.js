@@ -10,9 +10,9 @@ Routes.post('/create', User.create);
 Routes.get('/findall', User.findAll);
 
 Routes.get('/findone', User.findOne);
-/*
-Routes.put('/update', UserType.update);
 
+Routes.put('/update', User.update);
+/*
 Routes.put('/delete', UserType.delete);
 
 Routes.put('/recovery', UserType.recovery);*/

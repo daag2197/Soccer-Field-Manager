@@ -112,7 +112,7 @@ exports.update = function(req,res){
       });
   }).then(result => {
     res.send({
-      message: `Update Correct with id ${IdUserType}`
+      message: `Update Correct with id ${IdUser}`
     });
   }).catch(err => {
     return res.status(500).send({
