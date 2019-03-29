@@ -3,11 +3,11 @@ const { Router } = require('express');
 const router = Router();
 
 // Cargamos la rutas de los modulos
-const ComplexRoute = require('./Complex');
-const FieldRoute = require('./Field')
-const DayRoute = require('./Day');
-const LeagueRoute = require('./League');
-const TeamRoute = require('./Team');
+const ComplexRoute = require('./complex');
+const FieldRoute = require('./field')
+const DayRoute = require('./day');
+const LeagueRoute = require('./league');
+const TeamRoute = require('./team');
 const UserTypeRoute = require('./usertype');
 const UserRoute = require('./user'); 
 
