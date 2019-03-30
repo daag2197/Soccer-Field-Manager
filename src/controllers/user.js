@@ -120,3 +120,68 @@ exports.update = function(req,res){
     });
   });
 }
+
+exports.delete = function(req,res){
+  let IdUser = req.body.IdUser;
+  User.findOne({
+    where: {
+      IdUser: IdUser,
+      Status: '1'
+    }
+  }).then(user => {
+    if (!user) {
+      return res.status(404).send({
+        message: `Not Found. user with id ${IdUser}`
+      });
+    }
+    return User.update({
+      Status : '0'
+    },
+      {
+        where: {
+          IdUser: IdUser
+        }
+      });
+  }).then(result => {
+    res.send({
+      message: `Remmove with id ${IdUser}`
+    });
+  }).catch(err => {
+    return res.status(500).send({
+      message: err.message || "Error removing user type with id " + IdUser
+    });
+  });
+}
+
+exports.recovery = function(req,res){
+  let IdUser = req.body.IdUser;
+  User.findOne({
+    where: {
+      IdUser: IdUser,
+      Status: '0'
+    }
+  }).then(user => {
+    if (!user) {
+      return res.status(404).send({
+        message: `Not Found. user with id ${IdUser}`
+      });
+    }
+    return User.update({
+      Status : '1'
+    },
+      {
+        where: {
+          IdUser: IdUser
+        }
+      });
+  }).then(result => {
+    res.send({
+      message: `Recover with id ${IdUser}`
+    });
+  }).catch(err => {
+    return res.status(500).send({
+      message: err.message || "Error recovering user type with id " + IdUser
+    });
+  });
+}
+

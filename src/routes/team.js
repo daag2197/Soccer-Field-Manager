@@ -1,5 +1,5 @@
 const express = require("express");
-const Team = require("../controllers/Team");
+const Team = require("../controllers/team");
 
 const Routes = express.Router();
 

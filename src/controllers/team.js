@@ -65,24 +65,24 @@ exports.findOne = (req, res) => {
 
   Team.findOne({
     include: [{
-        model: models.League,
-        as: 'League Detail',
+      model: models.League,
+      as: 'League Detail',
+      attributes: {
+          exclude: ['Complex','GameDay','createdAt', 'updatedAt','Status']
+      },
+      include:[{
+        model: models.Day,
+        attributes:{
+          exclude: ['createdAt','updatedAt']
+        }
+      },
+      {
+        model: models.Complex,
+        as: 'Complex Detail',
         attributes: {
-            exclude: ['Complex','GameDay','createdAt', 'updatedAt','Status']
-        },
-        include:[{
-          model: models.Day,
-          attributes:{
-            exclude: ['createdAt','updatedAt']
-          }
-        },
-        {
-          model: models.Complex,
-          as: 'Complex Detail',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'Latitude', 'Longitude', 'Status']
-          }
-        }]
+          exclude: ['createdAt', 'updatedAt', 'Latitude', 'Longitude', 'Status']
+        }
+      }]
     }],
     attributes: {
         exclude: ['League','Status']
@@ -105,7 +105,7 @@ exports.update = (req,res) => {
   Team.findOne({
     where: {
       IdTeam: IdTeam,
-      status: '1'
+      Status: '1'
     }
   }).then(team => {
     if(!team){
@@ -130,7 +130,7 @@ exports.update = (req,res) => {
     });
   }).catch(err => {
     return res.status(500).send({
-        message: err.message || "Error updating team with id " + IdTeam
+      message: err.message || "Error updating team with id " + IdTeam
     });
   });
 }
@@ -149,7 +149,7 @@ exports.delete = (req,res) =>{
       })
     }
     return Team.update({
-      Status: 0
+      Status: '0'
     },
     {
       where: {
@@ -181,7 +181,7 @@ exports.recovery = (req,res) => {
       })
     }
     return Team.update({
-      Status: 1
+      Status: '1'
     },
     {
       where: {

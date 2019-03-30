@@ -1,7 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Athlete = sequelize.define('Athlete', {
-    IdAthlete: DataTypes.INTEGER,
+    IdAthlete:  {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     User: DataTypes.INTEGER,
     BirthDate: DataTypes.DATE,
     Team: DataTypes.INTEGER,
@@ -10,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Athlete.associate = function(models) {
     // associations can be defined here
+    Athlete.belongsTo(models.User, {as: 'Id User',foreignKey: "User"});
+    Athlete.belongsTo(models.Team,{as: 'Athlete Team',foreignKey: "Team"});
   };
   return Athlete;
 };

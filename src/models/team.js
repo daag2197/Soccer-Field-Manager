@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Team.associate = function(models) {
     // associations can be defined here
-    Team.belongsTo(models.League, { as: 'League Detail',foreignKey: "League" });
+    Team.belongsTo(models.League, { as: 'League Detail',foreignKey: 'League' });
+    Team.hasMany(models.Athlete,{foreignKey: 'Team'});
   };
   return Team;
 };
