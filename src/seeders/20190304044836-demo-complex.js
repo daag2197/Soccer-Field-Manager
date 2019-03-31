@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('complexes',[{
+    return queryInterface.bulkInsert('Complexes',[{
         ComplexName: 'Unidad Lopez Mateos',
         Latitude: '20.64636',
         Longitude: '-103.368589',
@@ -13,6 +13,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-      return queryInterface.bulkDelete('complexes', null, {}); 
+      return queryInterface.bulkDelete('complexes', null, {});
   }
 };

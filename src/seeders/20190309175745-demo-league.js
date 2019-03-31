@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('leagues', [{
+    return queryInterface.bulkInsert('Leagues', [{
       LeagueName: 'Lunes League',
       StartDate: '2019-03-11',
       EndDate: '2019-06-13',

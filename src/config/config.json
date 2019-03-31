@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "@Arevalo_97",
-    "database": "sfm2",
+    "password": "2632",
+    "database": "db_smf",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

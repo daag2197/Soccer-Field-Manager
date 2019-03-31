@@ -29,12 +29,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Usertypes',
+          model: 'UserTypes',
           key: 'IdUserType'
         }
       },
       Path: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       Status: {
