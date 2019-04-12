@@ -1,30 +1,27 @@
 const Sequelize = require("sequelize");
-var models = require("../models/");
-var User = models.User;
+const models = require("../models/");
+const User = models.User;
 const _ = require("lodash");
+const { sendResponse } = require('../services/responseHandler');
 
 exports.test = function (req, res) {
     console.log(req.query);
     res.send("Greetings from the Test controller!");
 };
 
-//Crear *Falta encriptar la contraseña
 exports.create = function (req, res) {
-    let user = {
-        FirstName: req.body.FirstName,
-        LastName:req.body.LastName,
-        SecondLastName:req.body.SecondLastName,
-        Email:req.body.Email,
-        Password:req.body.Password,
-        UserType:req.body.UserType,
-        Path:req.body.Path
-    }
-    User.create(user).then(doc => {
-        res.send(doc);
-    }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot save."
-        });
+  const body = req.body;
+  const user = User.build(body);
+  user.save()
+    .then((u) => user.generateAuthToken())
+    .then((token) => {
+      const objRes = {
+        user: user.toJS(),
+        token,
+      };
+      sendResponse(res, 'true', '200', objRes);
+    }).catch((err) => {
+      sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 };
 
@@ -55,7 +52,7 @@ exports.findAll = function (req, res) {
 };
 
 exports.findOne = function(req,res){
-  let IdUser = req.body.IdUser;
+  const id = req.body.id;
   User.findOne({
     attributes: {
       exclude: ["Status", "Password", "UserType"]
@@ -68,7 +65,7 @@ exports.findOne = function(req,res){
       }
     }],
     where: {
-      IdUser: IdUser,
+      id,
       Status: '1'
     }
   })

@@ -1,15 +1,15 @@
 {
   "development": {
     "username": "root",
-    "password": "2632",
+    "password": "root",
     "database": "db_smf",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "password": "2632",
+    "database": "db_smf",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

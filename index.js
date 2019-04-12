@@ -1,10 +1,11 @@
 const express = require('express')
 const app = express();
+require('dotenv').config();
 const Morgan = require('morgan')
 const bodyParser  = require('body-parser')
 const passport = require('passport')
 const cors = require('cors')
-const router = require('./src/routes');
+const router = require('./routes');
 
 // Ajustes de Puerto para servidor local
 app.set('port',process.env.PORT || 3000)
