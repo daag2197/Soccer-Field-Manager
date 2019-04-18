@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Leagues', {
-      IdLeague: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Complexes',
-          key: 'IdComplex'
+          key: 'id'
         }
       },
       GameDay: {
@@ -33,7 +33,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Days',
-          key: 'IdDay'
+          key: 'id'
         }
       },
       Status: {

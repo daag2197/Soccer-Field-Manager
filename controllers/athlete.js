@@ -85,8 +85,7 @@ exports.findAll = function (req, res) {
 }
 
 exports.findOne = function (req, res) {
-    let IdAthlete = req.body.IdAthlete;
-
+    const id = req.params.id;
     Athlete.findOne({
         include: [{
             model: models.User,
@@ -133,7 +132,7 @@ exports.findOne = function (req, res) {
             exclude: ['User','Team','League','Status']
         },
         where: {
-            IdAthlete: IdAthlete,
+            id,
             Status: 1
         }
     }).then(athletes => {
@@ -150,15 +149,15 @@ exports.findOne = function (req, res) {
 }
 
 exports.update = function(req,res){
-    let IdAthlete =  req.body.IdAthlete;
+    let id = req.params.id;
     Athlete.findOne({
         where: {
-            IdAthlete: IdAthlete,
+            id,
             Status: '1'
         }
     }).then(athlete => {
         if(!athlete){
-            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${IdAthlete}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${id}`);
         }
         return Athlete.update({
             BirthDate: req.body.BirthDate,
@@ -167,68 +166,80 @@ exports.update = function(req,res){
         },
         {
             where: {
-                IdAthlete: IdAthlete,
+                id,
                 Status: '1'
             }
+        }).then(result => {
+            const message =  `Update Correct with id ${id}`
+            sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+            const message = err.message || "Error updating athlete with id " + id;
+            sendResponse(res, 'false', '400', {},message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Update Correct with id ${IdAthlete}`);
     }).catch(err => {
-        const message = err.message || "Error updating athlete with id " + IdAthlete;
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error updating athlete with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
 exports.delete = function(req,res){
-    let IdAthlete =  req.body.IdAthlete;
+    let id =  req.params.id;
     Athlete.findOne({
         where: {
-            IdAthlete: IdAthlete,
+            id,
             Status: '1'
         }
     }).then(athlete => {
         if(!athlete){
-            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${IdAthlete}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${id}`);
         }
         return Athlete.update({
             Status: '0'
         },
         {
             where: {
-                IdAthlete: IdAthlete
+                id
             }
+        }).then(result => {
+            const message =  `Remmove with id ${id}`
+            sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+            const message = err.message || "Error removing athlete with id " + id;
+            sendResponse(res, 'false', '400', {},message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Remmove with id ${IdAthlete}`);
     }).catch(err => {
-        const message = err.message || "Error removing athlete with id " + IdAthlete;
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error removing athlete with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
 exports.recovery = function(req,res){
-    let IdAthlete =  req.body.IdAthlete;
+    let id =  req.params.id;
     Athlete.findOne({
         where: {
-            IdAthlete: IdAthlete,
+            id,
             Status: '0'
         }
     }).then(athlete => {
         if(!athlete){
-            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${IdAthlete}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${id}`);
         }
         return Athlete.update({
             Status: '1'
         },
         {
             where: {
-                IdAthlete: IdAthlete
+                id
             }
+        }).then(result => {
+            const message = `Recover with id ${id}`
+            sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+            const message = err.message || "Error recovering athlete with id " + id;
+            sendResponse(res, 'false', '400', {},message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Recover with id ${IdAthlete}`);
     }).catch(err => {
-        const message = err.message || "Error recovering athlete with id " + IdAthlete;
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error recovering athlete with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     });
 }

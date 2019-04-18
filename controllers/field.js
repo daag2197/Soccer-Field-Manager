@@ -49,7 +49,7 @@ exports.findAll = (req,res) => {
 }
 
 exports.findOne = (req,res) => {
-    let IdField = req.body.IdField;
+    let id = req.params.id;
 
     Field.findOne({
         include: [{
@@ -63,7 +63,7 @@ exports.findOne = (req,res) => {
             exclude: ['Complex','Status']
         },
         where: {
-            IdField: IdField,
+            id,
             status: 1
         }
     }).then(field => {
@@ -79,11 +79,11 @@ exports.findOne = (req,res) => {
 }
 
 exports.update = (req,res) => {
-    let IdField = req.body.IdField;
+    let id = req.params.id;
 
     Field.findOne({
         where: {
-            IdField: IdField,
+            id,
             Status: '1'
         }
     }).then(field => {
@@ -97,23 +97,27 @@ exports.update = (req,res) => {
         },
         {
             where: {
-                IdField: req.body.IdField,
+                id,
                 Status: '1'
             }
+        }).then(result => {
+            const message = `Update Correct with id ${id}`
+            sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+            const message = err.message || "Error updating field with id " + id
+            sendResponse(res, 'false', '400', {}, message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200',`Update Correct with id ${IdField}`);
     }).catch(err => {
-        const message = err.message || "Error updating field with id " + req.body.IdField
-        sendResponse(res, 'false', '500', {}, message);
+        const message = err.message || "Error updating field with id " + id
+        sendResponse(res, 'false', '400', {}, message);
     });
 }
 
 exports.delete = (req,res) => {
-    let IdField = req.body.IdField;
+    let id = req.params.id;
     Field.findOne({
         where: {
-            IdField: IdField,
+            id,
             Status: '1'
         }
     }).then(field =>{
@@ -125,22 +129,26 @@ exports.delete = (req,res) => {
         },
         {
             where: {
-                IdField: IdField
+                id
             }
+        }).then(result => {
+            const message = `Remmove with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error removing field with id " + id
+            sendResponse(res, 'false', '400', {}, message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Remmove with id ${IdField}`);
     }).catch(err => {
-        const message = err.message || "Error removing field with id " + req.body.IdField
-        sendResponse(res, 'false', '500', {}, message);
-    })
+        const message = err.message || "Error removing field with id " + id
+        sendResponse(res, 'false', '400', {}, message);
+    });
 }
 
 exports.recovery = (req,res) => {
-    let IdField = req.body.IdField;
+    let id = req.params.id;
     Field.findOne({
         where: {
-            IdField: IdField,
+            id,
             Status: '0'
         }
     }).then(field =>{
@@ -152,13 +160,17 @@ exports.recovery = (req,res) => {
         },
         {
             where: {
-                IdField: IdField
+                id
             }
+        }).then(result => {
+            const message = `Recover with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error recovering field with id " + id
+            sendResponse(res, 'false', '400', {}, message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Recover with id ${IdField}`);
     }).catch(err => {
-        const message = err.message || "Error recovering field with id " + req.body.IdField
-        sendResponse(res, 'false', '500', {}, message);
-    })
+        const message = err.message || "Error recovering field with id " + id
+        sendResponse(res, 'false', '400', {}, message);
+    });
 }

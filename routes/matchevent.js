@@ -3,16 +3,23 @@ const MatchEvent = require("../controllers/matchevent");
 
 const Routes = express.Router();
 
-Routes.post('/create',MatchEvent.create);
+//Create 
+Routes.post('/',MatchEvent.create);
 
+//Show All
 Routes.get('/findall',MatchEvent.findall);
 
-Routes.get('/findone',MatchEvent.findone);
+//Search One
+Routes.get('/:id',MatchEvent.findone);
 
+//delete
 Routes.put('/delete',MatchEvent.delete);
 
-Routes.put('/update',MatchEvent.update);
+//update
+Routes.put('/:id',MatchEvent.update);
 
+//recovery
 Routes.put('/recovery',MatchEvent.recovery);
+
 
 module.exports = Routes;

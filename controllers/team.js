@@ -129,12 +129,16 @@ exports.update = (req,res) => {
           IdTeam: IdTeam,
           Status: '1'
         }
+      }).then(result => {
+        const message = `Update Correct with id ${result}`
+        sendResponse(res, 'true', '200',message);
+      }).catch(err => {
+        const message = err.message || "Error updating team with id " + IdTeam;
+        sendResponse(res, 'false', '400', {},message);
       });
-  }).then(result => {
-    sendResponse(res, 'true', '200', `Update Correct with id ${IdTeam}`);
   }).catch(err => {
     const message = err.message || "Error updating team with id " + IdTeam;
-    sendResponse(res, 'false', '500', {},message);
+    sendResponse(res, 'false', '400', {},message);
   });
 }
 
@@ -156,13 +160,17 @@ exports.delete = (req,res) =>{
       where: {
         IdTeam: IdTeam
       }
+    }).then(result => {
+      const message = `Remmove with id ${result}`
+      sendResponse(res, 'true', '200', message);
+    }).catch(err => {
+      const message = err.message || "Error removing team with id " + IdTeam;
+      sendResponse(res, 'false', '400', {},message);
     });
-  }).then(result => {
-    sendResponse(res, 'true', '200', `Remmove with id ${IdTeam}`);
   }).catch(err => {
     const message = err.message || "Error removing team with id " + IdTeam;
-    sendResponse(res, 'false', '500', {},message);
-  })
+    sendResponse(res, 'false', '400', {},message);
+  });
 }
 
 exports.recovery = (req,res) => {
@@ -183,11 +191,15 @@ exports.recovery = (req,res) => {
       where: {
         IdTeam: IdTeam
       }
+    }).then(result => {
+      const message = `Recover with id ${result}`
+      sendResponse(res, 'true', '200',message);
+    }).catch(err => {
+      const message = err.message ||  "Error recovering team with id " + IdTeam;
+      sendResponse(res, 'false', '400', {},message);
     });
-  }).then(result => {
-    sendResponse(res, 'true', '200', `Recover with id ${IdTeam}`);
   }).catch(err => {
     const message = err.message ||  "Error recovering team with id " + IdTeam;
-    sendResponse(res, 'false', '500', {},message);
-  })
+    sendResponse(res, 'false', '400', {},message);
+  });
 }

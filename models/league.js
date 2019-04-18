@@ -1,10 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const League = sequelize.define("League",{
-      IdLeague: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
-      },
       LeagueName: DataTypes.STRING,
       StartDate: DataTypes.DATE,
       EndDate: DataTypes.DATE,

@@ -27,11 +27,11 @@ exports.findall = function(req,res){
     });
 }
 exports.findone = function(req,res){
-    let IdMatchEvent = req.body.IdMatchEvent
+    let id = req.params.id
     MatchEvent.findOne({
         where: {
             Active: '1',
-            id: IdMatchEvent
+            id
         }
     }).then(matchevent =>{
         if(!matchevent){
@@ -46,15 +46,15 @@ exports.findone = function(req,res){
 }
 exports.update = function(req,res){
     //var MatchEventOrig = "";
-    let IdMatchEvent = req.body.IdMatchEvent;
+    let id = req.params.id;
     MatchEvent.findOne({
         where: {
-            id: IdMatchEvent,
+            id,
             Active: '1'
         }
     }).then(matchevent => {
         if(!matchevent){
-            return sendResponse(res, 'false', '404', {}, `Not found. Match event with id ${IdMatchEvent}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Match event with id ${id}`);
         }
         //MatchEventOrig = matchevent.Description
         return MatchEvent.update({
@@ -62,68 +62,80 @@ exports.update = function(req,res){
         },
         {
             where: {
-                id: IdMatchEvent,
+                id,
                 Active: '1'
             }
+        }).then(result => { 
+            const message = `Update Correct with id ${id}`
+           sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error updating Match event with id " + id;
+            sendResponse(res, 'false', '400', {},message);
         });
-    }).then(result => { 
-       sendResponse(res, 'true', '200', `Update Correct with id ${IdMatchEvent}`);
     }).catch(err => {
-        const message = err.message || "Error updating Match event with id " + IdMatchEvent;
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error updating Match event with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 exports.delete = function(req,res){
-    let IdMatchEvent = req.body.IdMatchEvent;
+    let id = req.params.id;
     MatchEvent.findOne({
         where: {
-            id: IdMatchEvent,
+            id,
             Active: '1'
         }
     }).then(matchevent => {
         if(!matchevent){
-            return sendResponse(res, 'false', '404', {}, `Not found. Match event with id ${IdMatchEvent}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Match event with id ${id}`);
         }
         return MatchEvent.update({
             Active: '0'
         },
         {
             where: {
-                id: IdMatchEvent,
+                id,
                 Active: '1'
             }
+        }).then(result => { 
+            const message = `Remmove with id ${id}`
+           sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+            const message = err.message || "Error removing Match event with id " + id;
+            sendResponse(res, 'false', '400', {}, message);
         });
-    }).then(result => { 
-       sendResponse(res, 'true', '200', `Remmove with id ${IdMatchEvent}`);
     }).catch(err => {
-        const message = err.message || "Error removing Match event with id " + IdMatchEvent;
-        sendResponse(res, 'false', '500', {}, message);
+        const message = err.message || "Error removing Match event with id " + id;
+        sendResponse(res, 'false', '400', {}, message);
     });
 }
 exports.recovery = function(req,res){
-    let IdMatchEvent = req.body.IdMatchEvent;
+    let id = req.params.id;
     MatchEvent.findOne({
         where: {
-            id: IdMatchEvent,
+            id,
             Active: '0'
         }
     }).then(matchevent => {
         if(!matchevent){
-           return sendResponse(res, 'false', '404', {}, `Not found. Match event with id ${IdMatchEvent}`);
+           return sendResponse(res, 'false', '404', {}, `Not found. Match event with id ${id}`);
         }
         return MatchEvent.update({
             Active: '1'
         },
         {
             where: {
-                id: IdMatchEvent,
+                id,
                 Active: '0'
             }
-        });
-    }).then(result => { 
-       sendResponse(res, 'true', '200', `Recover with id ${IdMatchEvent}`);
+        }).then(result => { 
+            const message = `Recover with id ${id}`
+            sendResponse(res, 'true', '200', message);
+         }).catch(err => {
+             const message = err.message || "Error recovering Match event with id " + id;
+             sendResponse(res, 'false', '400', {}, message);
+         });
     }).catch(err => {
-        const message = err.message || "Error recovering Match event with id " + IdMatchEvent;
-        sendResponse(res, 'false', '500', {}, message);
+        const message = err.message || "Error recovering Match event with id " + id;
+        sendResponse(res, 'false', '400', {}, message);
     });
 }

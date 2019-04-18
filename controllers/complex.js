@@ -47,14 +47,14 @@ exports.findAll = (req,res) => {
 
 exports.findOne = (req,res) => {
 
-    let IdComplex = req.body.IdComplex;
+    let id = req.params.id;
     
     Complex.findOne({
         attributes:{
             exclude: ['Status']
         },
         where: {
-            IdComplex: IdComplex,
+            id,
             Status: 1
         }
     }).then(complex => {
@@ -70,16 +70,15 @@ exports.findOne = (req,res) => {
 }
 
 exports.update = (req,res) => {
-
-    let IdComplex = req.body.IdComplex;
+    let id = req.params.id;
     Complex.findOne({
         where: {
-            IdComplex: IdComplex,
+            id,
             status: '1'
         }
     }).then(complex => {
         if(!complex){
-            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${IdComplex}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${id}`);
         }
         return Complex.update(
         {
@@ -90,29 +89,33 @@ exports.update = (req,res) => {
         },
         {
             where: {
-                IdComplex: IdComplex,
+                id,
                 Status: '1'
             }
+        }).then(result => {
+            const message = `Update Correct with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error updating complex with id " + id;
+            sendResponse(res, 'false', '400', {}, message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Update Correct with id ${IdComplex}`);
     }).catch(err => {
-        const message = err.message || "Error updating complex with id " + IdComplex
-        sendResponse(res, 'false', '500', {}, message);
+        const message = err.message || "Error updating complex with id " + id;
+        sendResponse(res, 'false', '400', {}, message);
     });
 }
 
 exports.delete = (req,res) => {
 
-    let IdComplex = req.body.IdComplex;
+    let id = req.params.id;
     Complex.findOne({
         where: {
-            IdComplex: IdComplex,
+            id,
             Status: '1'
         }
     }).then(complex => {
         if(!complex){
-            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${IdComplex}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${id}`);
         }
         return Complex.update(
         {
@@ -120,28 +123,32 @@ exports.delete = (req,res) => {
         },
         {
             where: {
-                IdComplex: IdComplex 
+                id
             }
+        }).then(result => {
+            const message =  `Remove with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error removing complex with id " + id
+            sendResponse(res, 'false', '400', {},message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Remove with id ${IdComplex}`);
     }).catch(err => {
-        const message = err.message || "Error removing complex with id " + IdComplex
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error removing complex with id " + id
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
 exports.recovery = (req,res) => {
 
-    let IdComplex = req.body.IdComplex;
+    let id = req.params.id;
     Complex.findOne({
         where: {
-            IdComplex: IdComplex,
+            id,
             Status: '0'
         }
     }).then(complex => {
         if(!complex){
-            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${IdComplex}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${id}`);
         }
         return Complex.update(
         {
@@ -149,13 +156,17 @@ exports.recovery = (req,res) => {
         },
         {
             where: {
-                IdComplex: IdComplex 
+                id 
             }
+        }).then(result => {
+            const message = `Recovery with id ${id}`
+            sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+            const message = err.message || "Error recovering Complex with id " + id;
+            sendResponse(res, 'false', '400', {},message);
         });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Recovery with id ${IdComplex}`);
     }).catch(err => {
-        const message = err.message || "Error recovering Complex with id " + IdComplex;
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error recovering Complex with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     });
 }

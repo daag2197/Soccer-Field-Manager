@@ -5,16 +5,22 @@ const Routes = express.Router();
 
 Routes.get('/test', League.test);
 
-Routes.post('/create', League.create);
+//Create
+Routes.post('/', League.create);
 
+//Show all
 Routes.get('/findall', League.findAll);
 
-Routes.get('/findone', League.findOne);
+//Search One
+Routes.get('/:id', League.findOne);
 
-Routes.put('/update',League.update);
+//Update
+Routes.put('/:id', League.update);
 
-Routes.put('/delete', League.delete);
+//Delete
+Routes.put('/delete/:id', League.delete);
 
-Routes.put('/recovery',League.recovery);
+//Recovery
+Routes.put('/recovery/:id', League.recovery);
 
 module.exports = Routes;

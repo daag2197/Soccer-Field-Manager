@@ -5,16 +5,22 @@ const Routes = express.Router();
 
 Routes.get('/test',Complex.test);
 
-Routes.post('/create',Complex.create);
+//Create
+Routes.post('/', Complex.create);
 
-Routes.get('/findall',Complex.findAll);
+//Show all
+Routes.get('/findall', Complex.findAll);
 
-Routes.get('/findone',Complex.findOne);
+//Search One
+Routes.get('/:id', Complex.findOne);
 
-Routes.put('/update',Complex.update);
+//Update
+Routes.put('/:id', Complex.update);
 
-Routes.put('/delete',Complex.delete);
+//Delete
+Routes.put('/delete/:id', Complex.delete);
 
-Routes.put('/recovery',Complex.recovery);
+//Recovery
+Routes.put('/recovery/:id', Complex.recovery);
 
 module.exports = Routes;

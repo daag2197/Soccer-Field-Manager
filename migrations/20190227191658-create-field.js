@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Fields', {
-      IdField: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Complexes',
-          key: 'IdComplex'
+          key: 'id'
         }
       },
       Status: {

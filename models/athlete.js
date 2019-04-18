@@ -1,10 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Athlete = sequelize.define('Athlete', {
-    IdAthlete:  {
-      type: DataTypes.INTEGER,
-      primaryKey: true
-    },
     User: DataTypes.INTEGER,
     BirthDate: DataTypes.DATE,
     Team: DataTypes.INTEGER,

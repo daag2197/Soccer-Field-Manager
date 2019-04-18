@@ -7,12 +7,12 @@ Routes.post('/', User.create);
 
 Routes.get('/findall', User.findAll);
 
-Routes.get('/:id', User.findOne);
+Routes.get('/:id',User.findOne);
 
 Routes.put('/:id', User.update);
 
-Routes.put('/delete', User.delete);
+Routes.put('/delete/:id', User.delete);
 
-Routes.put('/recovery', User.recovery);
+Routes.put('/recovery/:id', User.recovery);
 
 module.exports = Routes;

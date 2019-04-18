@@ -77,13 +77,16 @@ exports.update = function(req,res) {
                 IdUserType: IdUserType,
                 Status: '1'
             }
+        }).then(result => {
+          const message = `Update Correct with id ${result}`;
+          sendResponse(res, 'true', '200',message);
+        }).catch(err => {
+          const message = err.message || "Error updating user type with id " + IdUserType;
+          sendResponse(res, 'false', '400', {}, message);
         });
-    }).then(result => {
-      const message = `Update Correct with id ${IdUserType}`;
-      sendResponse(res, 'true', '200',message);
     }).catch(err => {
       const message = err.message || "Error updating user type with id " + IdUserType;
-      sendResponse(res, 'false', '500', {}, message);
+      sendResponse(res, 'false', '400', {}, message);
     });
 }
 
@@ -105,14 +108,17 @@ exports.delete = function(req,res){
       where: {
         IdUserType: IdUserType
       }
+    }).then(result => {
+      const message = `Remmove with id ${result}`;
+      sendResponse(res, 'true', '200',message);
+    }).catch(err => {
+      const message = err.message || "Error removing user type with id " + IdUserType;
+      sendResponse(res, 'false', '400', {}, message);
     });
-  }).then(result => {
-    const message = `Remmove with id ${IdUserType}`;
-    sendResponse(res, 'true', '200',message);
   }).catch(err => {
     const message = err.message || "Error removing user type with id " + IdUserType;
-    sendResponse(res, 'false', '500', {}, message);
-  })
+    sendResponse(res, 'false', '400', {}, message);
+  });
 }
 
 exports.recovery = function(req,res){
@@ -133,12 +139,15 @@ exports.recovery = function(req,res){
       where: {
         IdUserType: IdUserType
       }
+    }).then(result => {
+      const message = `Recover with id ${result}`;
+      sendResponse(res, 'true', '200',message);
+    }).catch(err => {
+      const message = err.message || "Error recovering team with id " + IdUserType
+      sendResponse(res, 'false', '400', {}, message);
     });
-  }).then(result => {
-    const message = `Recover with id ${IdUserType}`;
-    sendResponse(res, 'true', '200',message);
   }).catch(err => {
     const message = err.message || "Error recovering team with id " + IdUserType
-    sendResponse(res, 'false', '500', {}, message);
-  })
+    sendResponse(res, 'false', '400', {}, message);
+  });
 }

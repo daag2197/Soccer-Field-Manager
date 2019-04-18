@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Days', {
-      IdDay: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,

@@ -1,10 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Complex = sequelize.define('Complex', {
-    IdComplex:{
-      type: DataTypes.INTEGER,
-      primaryKey: true
-    },
     ComplexName: DataTypes.STRING,
     Latitude: DataTypes.STRING,
     Longitude: DataTypes.STRING,

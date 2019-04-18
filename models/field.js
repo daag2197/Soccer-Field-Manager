@@ -1,10 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Field = sequelize.define('Field', {
-    IdField: {
-      type: DataTypes.INTEGER,
-      primaryKey: true
-    },
     FieldName: DataTypes.STRING,
     Complex: DataTypes.INTEGER,
     Status: DataTypes.BOOLEAN

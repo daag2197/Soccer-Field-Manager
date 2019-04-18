@@ -87,12 +87,12 @@ exports.update = function(req,res){
   const id = req.params.id;
   User.findOne({
     where: {
-      IdUser: IdUser,
+      id,
       Status: 1
     }
   }).then(user => {
     if (!user) {
-      return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${IdUser}`);
+      return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${id}`);
     }
     return User.update({
       FirstName: req.body.FirstName,
@@ -109,7 +109,8 @@ exports.update = function(req,res){
           Status: '1'
         }
       }).then(result => {
-        sendResponse(res, 'true', '200', result);
+        const message =  `Update Correct with id ${result}`
+        sendResponse(res, 'true', '200',message);
       }).catch(err => {
         const message = err.message || "Error updating user with id " + id;
         sendResponse(res, 'false', '400', {}, message);
@@ -129,17 +130,18 @@ exports.delete = function(req,res){
     }
   }).then(user => {
     if (!user) {
-      return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${IdUser}`);
+      return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${id}`);
     }
     return User.update({
       Status : '0'
     },
       {
         where: {
-          IdUser: IdUser
+          id
         }
       }).then(result => {
-        sendResponse(res, 'true', '200', `Remmove with id ${IdUser}`);
+        const message = `Remmove with id ${result}`
+        sendResponse(res, 'true', '200', message);
       }).catch(err => {
         const message = err.message || "Error removing user with id " + id;
         sendResponse(res, 'false', '400', {}, message);
@@ -151,34 +153,33 @@ exports.delete = function(req,res){
 }
 
 exports.recovery = function(req,res){
-  let IdUser = req.body.IdUser;
+  let id = req.params.id;
   User.findOne({
     where: {
-      IdUser: IdUser,
+      id,
       Status: '0'
     }
   }).then(user => {
     if (!user) {
-      return res.status(404).send({
-        message: `Not Found. user with id ${IdUser}`
-      });
+     return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${id}`);
     }
     return User.update({
       Status : '1'
     },
       {
         where: {
-          IdUser: IdUser
+          id
         }
+      }).then(result => {
+        message = `Recover with id ${result}`;
+        sendResponse(res, 'true', '200', message);
+      }).catch(err => {
+        const message = err.message || "Error recovering user with id " + id;
+        sendResponse(res, 'false', '400', {}, message);
       });
-  }).then(result => {
-    res.send({
-      message: `Recover with id ${IdUser}`
-    });
   }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Error recovering user type with id " + IdUser
-    });
+    const message = err.message || "Error recovering user with id " + id;
+    sendResponse(res, 'false', '400', {}, message);
   });
 }
 

@@ -60,7 +60,7 @@ exports.findAll = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-    let IdLeague = req.body.IdLeague;
+    let id = req.params.id;
 
     League.findOne({
         include: [{
@@ -80,8 +80,8 @@ exports.findOne = (req, res) => {
             exclude: ['Complex', 'Status']
         },
         where: {
-            IdLeague: IdLeague,
-            status: 1
+           id,
+           status: 1
         }
     }).then(league => {
         if(!league){
@@ -97,88 +97,100 @@ exports.findOne = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    let IdLeague = req.body.IdLeague;
+    let id = req.params.id;
 
     League.findOne({
         where: {
-            IdLeague: IdLeague,
+            id,
             Status: '1'
         }
     }).then(league => {
         if (!league) {
-            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${IdLeague}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${id}`);
         }
-        return League.update(
-            {
-                LeagueName: req.body.LeagueName,
-                StartDate: req.body.StartDate,
-                EndDate: req.body.EndDate,
-                Complex: req.body.Complex,
-                GameDay: req.body.GameDay
-            },
-            {
-                where: {
-                    IdLeague: req.body.IdLeague,
-                    Status: '1'
-                }
-            });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Update Correct with id ${IdLeague}`);
+        return League.update({
+            LeagueName: req.body.LeagueName,
+            StartDate: req.body.StartDate,
+            EndDate: req.body.EndDate,
+            Complex: req.body.Complex,
+            GameDay: req.body.GameDay
+        },
+        {
+            where: {
+                id,
+                Status: '1'
+            }
+        }).then(result => {
+            const message = `Update Correct with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message ||  "Error updating league with id " + id;
+            sendResponse(res, 'false', '400', {},message);
+        });
     }).catch(err => {
-        const message = err.message ||  "Error updating league with id " + req.body.IdLeague;
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message ||  "Error updating league with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
 exports.delete = (req, res) => {
-    let IdLeague = req.body.IdLeague;
+    let id = req.params.id;
     League.findOne({
         where: {
-            IdLeague: IdLeague,
+            id,
             Status: '1'
         }
     }).then(league => {
         if (!league) {
-            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${IdLeague}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${id}`);
         }
         return League.update({
             Status: 0
         },
-            {
-                where: {
-                    IdLeague: IdLeague
-                }
-            });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Remmove with id ${IdLeague}`);
+        {
+            where: {
+                id
+            }
+        }).then(result => {
+            const message = `Remmove with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error removing league with id " + id;
+            sendResponse(res, 'false', '400', {},message);
+        });
     }).catch(err => {
-        const message = err.message || "Error removing league with id " + req.body.IdLeague
-        sendResponse(res, 'false', '500', {},message);
+        const message = err.message || "Error removing league with id " + id;
+        sendResponse(res, 'false', '400', {},message);
     })
 }
 
 exports.recovery = (req, res) => {
-    let IdLeague = req.body.IdLeague;
+    let id = req.params.id;
     League.findOne({
         where: {
-            IdLeague: IdLeague,
+            id,
             Status: '0'
         }
     }).then(league => {
         if (!league) {
-            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${IdLeague}`);
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${id}`);
         }
         return League.update({
             Status: 1
         },
-            {
-                where: {
-                    IdLeague: IdLeague
-                }
-            });
-    }).then(result => {
-        sendResponse(res, 'true', '200', `Recover with id ${IdLeague}`);
+        {
+            where: {
+                id
+            }
+        }).then(result => {
+            const message = `Recover with id ${id}`
+            sendResponse(res, 'true', '200', message);
+        }).catch(err => {
+            const message = err.message || "Error recovering league with id " + id;
+            sendResponse(res, 'false', '400', {}, "" + id,message);
+        });
     }).catch(err => {
-        sendResponse(res, 'false', '500', {}, "Error recovering league with id " + IdLeague, err.message);
-    })
+        const message = err.message || "Error recovering league with id " + id;
+        sendResponse(res, 'false', '400', {}, "" + id,message);
+    });
 }
