@@ -30,7 +30,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'UserTypes',
-          key: 'IdUserType'
+          key: 'id'
         }
       },
       Path: {

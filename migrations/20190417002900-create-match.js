@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Fields',
-          key: 'IdField'
+          key: 'id'
         }
       },
       League: {
@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Leagues',
-          key: 'IdLeague'
+          key: 'id'
         }
       },
       Local: {
@@ -29,7 +29,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Teams',
-          key: 'IdTeam'
+          key: 'id'
         }
       },
       Guest: {
@@ -37,7 +37,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Teams',
-          key: 'IdTeam'
+          key: 'id'
         }
       },
       Referee: {

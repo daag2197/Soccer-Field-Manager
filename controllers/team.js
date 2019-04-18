@@ -65,7 +65,7 @@ exports.findAll = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-  let IdTeam = req.body.IdTeam;
+  let id = req.params.id;
 
   Team.findOne({
     include: [{
@@ -92,7 +92,7 @@ exports.findOne = (req, res) => {
         exclude: ['League','Status']
     },
     where: {
-      IdTeam: IdTeam,
+      id,
       Status: 1
     }
   }).then(teams => {
@@ -109,15 +109,15 @@ exports.findOne = (req, res) => {
 }
 
 exports.update = (req,res) => {
-  let IdTeam = req.body.IdTeam;
+  let id = req.params.id;
   Team.findOne({
     where: {
-      IdTeam: IdTeam,
+      id,
       Status: '1'
     }
   }).then(team => {
     if(!team){
-      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdTeam}`);
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
     }
     return Team.update(
       {
@@ -126,80 +126,80 @@ exports.update = (req,res) => {
       },
       {
         where: {
-          IdTeam: IdTeam,
+          id,
           Status: '1'
         }
       }).then(result => {
-        const message = `Update Correct with id ${result}`
+        const message = `Update Correct with id ${id}`
         sendResponse(res, 'true', '200',message);
       }).catch(err => {
-        const message = err.message || "Error updating team with id " + IdTeam;
+        const message = err.message || "Error updating team with id " + id;
         sendResponse(res, 'false', '400', {},message);
       });
   }).catch(err => {
-    const message = err.message || "Error updating team with id " + IdTeam;
+    const message = err.message || "Error updating team with id " + id;
     sendResponse(res, 'false', '400', {},message);
   });
 }
 
 exports.delete = (req,res) =>{
-  let IdTeam = req.body.IdTeam;
+  let id = req.params.id;
   Team.findOne({
     where: {
-      IdTeam: IdTeam,
+      id,
       Status: '1'
     }
   }).then(team => {
     if (!team) {
-      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdTeam}`);
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
     }
     return Team.update({
       Status: '0'
     },
     {
       where: {
-        IdTeam: IdTeam
+        id
       }
     }).then(result => {
-      const message = `Remmove with id ${result}`
+      const message = `Remmove with id ${id}`
       sendResponse(res, 'true', '200', message);
     }).catch(err => {
-      const message = err.message || "Error removing team with id " + IdTeam;
+      const message = err.message || "Error removing team with id " + id;
       sendResponse(res, 'false', '400', {},message);
     });
   }).catch(err => {
-    const message = err.message || "Error removing team with id " + IdTeam;
+    const message = err.message || "Error removing team with id " + id;
     sendResponse(res, 'false', '400', {},message);
   });
 }
 
 exports.recovery = (req,res) => {
-  let IdTeam = req.body.IdTeam;
+  let id = req.params.id;
   Team.findOne({
     where: {
-      IdTeam: IdTeam,
+      id,
       Status: '0'
     }
   }).then(team => {
     if (!team) {
-      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdTeam}`);
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
     }
     return Team.update({
       Status: '1'
     },
     {
       where: {
-        IdTeam: IdTeam
+        id
       }
     }).then(result => {
-      const message = `Recover with id ${result}`
+      const message = `Recover with id ${id}`
       sendResponse(res, 'true', '200',message);
     }).catch(err => {
-      const message = err.message ||  "Error recovering team with id " + IdTeam;
+      const message = err.message ||  "Error recovering team with id " + id;
       sendResponse(res, 'false', '400', {},message);
     });
   }).catch(err => {
-    const message = err.message ||  "Error recovering team with id " + IdTeam;
+    const message = err.message ||  "Error recovering team with id " + id;
     sendResponse(res, 'false', '400', {},message);
   });
 }

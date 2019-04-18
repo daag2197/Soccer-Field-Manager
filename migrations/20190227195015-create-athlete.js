@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Teams',
-          key: 'IdTeam'
+          key: 'id'
         }
       },
       Captain: {

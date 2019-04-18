@@ -36,13 +36,13 @@ exports.findAll = function (req,res) {
 };
 
 exports.findOne = function (req,res) {
-    let IdUserType = req.body.IdUserType;
+    let id = req.params.id;
     UserType.findOne({
         attributes: {
             exclude: ['Status']
         },
         where: {
-          IdUserType: IdUserType,
+          id,
           Status: '1'
         }
     }).then(usertype => {
@@ -59,95 +59,95 @@ exports.findOne = function (req,res) {
 }
 
 exports.update = function(req,res) {
-    let IdUserType = req.body.IdUserType
+    let id = req.params.id
     UserType.findOne({
         where: {
-            IdUserType: IdUserType,
-            Status: '1'
+          id,
+          Status: '1'
         }
     }).then(usertype => {
         if(!usertype){
-          return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdUserType}`);
+          return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
         }
         return UserType.update({
             Description: req.body.Description
         },
         {
             where: {
-                IdUserType: IdUserType,
-                Status: '1'
+              id,
+              Status: '1'
             }
         }).then(result => {
-          const message = `Update Correct with id ${result}`;
+          const message = `Update Correct with id ${id}`;
           sendResponse(res, 'true', '200',message);
         }).catch(err => {
-          const message = err.message || "Error updating user type with id " + IdUserType;
+          const message = err.message || "Error updating user type with id " + id;
           sendResponse(res, 'false', '400', {}, message);
         });
     }).catch(err => {
-      const message = err.message || "Error updating user type with id " + IdUserType;
+      const message = err.message || "Error updating user type with id " + id;
       sendResponse(res, 'false', '400', {}, message);
     });
 }
 
 exports.delete = function(req,res){
-  let IdUserType = req.body.IdUserType;
+  let id = req.params.id;
   UserType.findOne({
     where: {
-      IdUserType: IdUserType,
+      id,
       Status: '1'
     }
   }).then(usertype => {
     if (!usertype) {
-      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdUserType}`);
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
     }
     return UserType.update({
       Status: 0
     },
     {
       where: {
-        IdUserType: IdUserType
+        id
       }
     }).then(result => {
-      const message = `Remmove with id ${result}`;
+      const message = `Remmove with id ${id}`;
       sendResponse(res, 'true', '200',message);
     }).catch(err => {
-      const message = err.message || "Error removing user type with id " + IdUserType;
+      const message = err.message || "Error removing user type with id " + id;
       sendResponse(res, 'false', '400', {}, message);
     });
   }).catch(err => {
-    const message = err.message || "Error removing user type with id " + IdUserType;
+    const message = err.message || "Error removing user type with id " + id;
     sendResponse(res, 'false', '400', {}, message);
   });
 }
 
 exports.recovery = function(req,res){
-  let IdUserType = req.body.IdUserType;
+  let id = req.params.id;
   UserType.findOne({
     where: {
-      IdUserType: IdUserType,
+      id,
       Status: '0'
     }
   }).then(usertype => {
     if (!usertype) {
-      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdUserType}`);
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
     }
     return UserType.update({
       Status: '1'
     },
     {
       where: {
-        IdUserType: IdUserType
+        id
       }
     }).then(result => {
-      const message = `Recover with id ${result}`;
+      const message = `Recover with id ${id}`;
       sendResponse(res, 'true', '200',message);
     }).catch(err => {
-      const message = err.message || "Error recovering team with id " + IdUserType
+      const message = err.message || "Error recovering team with id " + id
       sendResponse(res, 'false', '400', {}, message);
     });
   }).catch(err => {
-    const message = err.message || "Error recovering team with id " + IdUserType
+    const message = err.message || "Error recovering team with id " + id
     sendResponse(res, 'false', '400', {}, message);
   });
 }

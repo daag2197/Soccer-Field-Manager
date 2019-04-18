@@ -12,14 +12,14 @@ Routes.get('/findall',MatchEvent.findall);
 //Search One
 Routes.get('/:id',MatchEvent.findone);
 
-//delete
-Routes.put('/delete',MatchEvent.delete);
+//Delete
+Routes.put('/delete/:id',MatchEvent.delete);
 
-//update
+//Update
 Routes.put('/:id',MatchEvent.update);
 
-//recovery
-Routes.put('/recovery',MatchEvent.recovery);
+//Recovery
+Routes.put('/recovery/:id',MatchEvent.recovery);
 
 
 module.exports = Routes;
