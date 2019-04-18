@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 var models = require("../models/");
 var UserType = models.UserType;
 const _ = require("lodash");
+const { sendResponse } = require('../services/responseHandler');
 
 exports.test = function(req, res) {
     console.log(req.query);
@@ -14,21 +15,23 @@ exports.create = function (req, res) {
     }
   
     UserType.create(usertype).then(doc => {
-        res.send(doc);
+      sendResponse(res,'true','200',doc);
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot save."
-        });
+      sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 };
 
 exports.findAll = function (req,res) {
-    UserType.findAll().then(usertype => {
-        res.send({ usertype });
+    UserType.findAll({where: {Status: '1'} }).then(usertype => {
+      if(usertype == ""){
+        sendResponse(res, 'false', '404', {}, `Not found. usertype`);
+      }
+      else{
+        sendResponse(res, 'true', '200', usertype);
+      }
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot retrive."
-        });
+      const message = err.message || "cannot retrive.";
+      sendResponse(res, 'false', '400', {}, message);
     });
 };
 
@@ -43,11 +46,15 @@ exports.findOne = function (req,res) {
           Status: '1'
         }
     }).then(usertype => {
-        res.send({ usertype });
+      if(!usertype){
+        sendResponse(res, 'false', '404', {}, `Not found. User Type`);
+      }
+      else{
+        sendResponse(res, 'true', '200', usertype);
+      }
       }).catch(err => {
-        res.status(400).send({
-          message: err.message || "cannot retrive."
-        });
+        const message = err.message || "cannot retrive."
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -60,9 +67,7 @@ exports.update = function(req,res) {
         }
     }).then(usertype => {
         if(!usertype){
-            return res.status(404).send({
-                message:`Not Found. user type with id ${IdUserType}`
-            });
+          return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdUserType}`);
         }
         return UserType.update({
             Description: req.body.Description
@@ -74,13 +79,11 @@ exports.update = function(req,res) {
             }
         });
     }).then(result => {
-        res.send({
-            message: `Update Correct with id ${IdUserType}`
-        });
+      const message = `Update Correct with id ${IdUserType}`;
+      sendResponse(res, 'true', '200',message);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error updating user type with id " + IdUserType
-        });
+      const message = err.message || "Error updating user type with id " + IdUserType;
+      sendResponse(res, 'false', '500', {}, message);
     });
 }
 
@@ -93,9 +96,7 @@ exports.delete = function(req,res){
     }
   }).then(usertype => {
     if (!usertype) {
-      return res.status(404).send({
-        message: `Not found. User Type with id ${IdUserType}`
-      })
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdUserType}`);
     }
     return UserType.update({
       Status: 0
@@ -106,13 +107,11 @@ exports.delete = function(req,res){
       }
     });
   }).then(result => {
-    res.send({
-      message: `Remmove with id ${IdUserType}`
-    })
+    const message = `Remmove with id ${IdUserType}`;
+    sendResponse(res, 'true', '200',message);
   }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Error removing user type with id " + IdUserType
-    });
+    const message = err.message || "Error removing user type with id " + IdUserType;
+    sendResponse(res, 'false', '500', {}, message);
   })
 }
 
@@ -125,9 +124,7 @@ exports.recovery = function(req,res){
     }
   }).then(usertype => {
     if (!usertype) {
-      return res.status(404).send({
-        message: `Not found. User Type with id ${IdUserType}`
-      })
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdUserType}`);
     }
     return UserType.update({
       Status: '1'
@@ -138,12 +135,10 @@ exports.recovery = function(req,res){
       }
     });
   }).then(result => {
-    res.send({
-      message: `Recover with id ${IdUserType}`
-    })
+    const message = `Recover with id ${IdUserType}`;
+    sendResponse(res, 'true', '200',message);
   }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Error recovering team with id " + IdUserType
-    });
+    const message = err.message || "Error recovering team with id " + IdUserType
+    sendResponse(res, 'false', '500', {}, message);
   })
 }

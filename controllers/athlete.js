@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 var models = require("../models/");
 var Athlete = models.Athlete;
 const _ = require("lodash");
+const { sendResponse } = require('../services/responseHandler');
 
 exports.test = function (req, res) {
     console.log(req.query);
@@ -16,11 +17,9 @@ exports.create = function (req, res) {
         Captain: req.body.Captain
     }
     Athlete.create(athlete).then(doc => {
-        res.send(athlete);
+        sendResponse(res,'true','200',doc);
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot save."
-        });
+        sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 };
 
@@ -74,11 +73,14 @@ exports.findAll = function (req, res) {
           Status: 1
         }
     }).then(athletes => {
-        res.send({ athletes });
+        if(athletes == ""){
+            sendResponse(res, 'false', '404', {}, `Not found. athletes`);
+        }else{
+            sendResponse(res, 'true', '200', athletes);
+        }
     }).catch(err => {
-        res.status(400).send({
-          message: err.message || "cannot retrive."
-        });
+        const message = err.message || "cannot retrive."
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -135,11 +137,15 @@ exports.findOne = function (req, res) {
             Status: 1
         }
     }).then(athletes => {
-        res.send({ athletes });
+        if(!athletes){
+            sendResponse(res, 'false', '404', {}, `Not found. athletes`);
+        }
+        else{
+            sendResponse(res, 'true', '200', athletes);
+        }
     }).catch(err => {
-        res.status(400).send({
-          message: err.message || "cannot retrive."
-        });
+        const message = err.message || "cannot retrive."
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -152,9 +158,7 @@ exports.update = function(req,res){
         }
     }).then(athlete => {
         if(!athlete){
-            return res.status(404).send({
-                message: `Not found. Athlete with id ${IdAthlete}`
-            });
+            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${IdAthlete}`);
         }
         return Athlete.update({
             BirthDate: req.body.BirthDate,
@@ -168,13 +172,10 @@ exports.update = function(req,res){
             }
         });
     }).then(result => {
-        res.send({
-            message: `Update Correct with id ${IdAthlete}`
-        });
+        sendResponse(res, 'true', '200', `Update Correct with id ${IdAthlete}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error updating athlete with id " + IdAthlete
-        });
+        const message = err.message || "Error updating athlete with id " + IdAthlete;
+        sendResponse(res, 'false', '500', {},message);
     });
 }
 
@@ -187,9 +188,7 @@ exports.delete = function(req,res){
         }
     }).then(athlete => {
         if(!athlete){
-            return res.status(404).send({
-                message: `Not found. Athlete with id ${IdAthlete}`
-            });
+            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${IdAthlete}`);
         }
         return Athlete.update({
             Status: '0'
@@ -200,13 +199,10 @@ exports.delete = function(req,res){
             }
         });
     }).then(result => {
-        res.send({
-            message: `Remmove with id ${IdAthlete}`
-        });
+        sendResponse(res, 'true', '200', `Remmove with id ${IdAthlete}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error removing athlete with id " + IdAthlete
-        });
+        const message = err.message || "Error removing athlete with id " + IdAthlete;
+        sendResponse(res, 'false', '500', {},message);
     });
 }
 
@@ -219,9 +215,7 @@ exports.recovery = function(req,res){
         }
     }).then(athlete => {
         if(!athlete){
-            return res.status(404).send({
-                message: `Not found. Athlete with id ${IdAthlete}`
-            });
+            return sendResponse(res, 'false', '404', {}, `Not found. Athlete with id ${IdAthlete}`);
         }
         return Athlete.update({
             Status: '1'
@@ -232,12 +226,9 @@ exports.recovery = function(req,res){
             }
         });
     }).then(result => {
-        res.send({
-            message: `Recover with id ${IdAthlete}`
-        });
+        sendResponse(res, 'true', '200', `Recover with id ${IdAthlete}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error recovering athlete with id " + IdAthlete
-        });
+        const message = err.message || "Error recovering athlete with id " + IdAthlete;
+        sendResponse(res, 'false', '500', {},message);
     });
 }

@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 var models = require('../models/');
 var Complex = models.Complex;
 const _ = require('lodash');
+const { sendResponse } = require('../services/responseHandler');
 
 exports.test = function(req,res) {
     console.log(req.query);
@@ -17,11 +18,9 @@ exports.create = function (req, res) {
     }
 
     Complex.create(complex).then(doc => {
-        res.send(complex);
+        sendResponse(res,'true','200',doc);
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot save."
-        });
+        sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 };
 
@@ -35,11 +34,14 @@ exports.findAll = (req,res) => {
         }
     })
     .then(complexes => {
-        res.send({complexes});
+        if(complexes == ""){
+            sendResponse(res, 'false', '404', {}, `Not found. Complexes`);
+        }else{
+            sendResponse(res, 'true', '200', complexes);
+        }
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot retrive."
-        });
+        const message = err.message || "cannot retrive."
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -57,15 +59,13 @@ exports.findOne = (req,res) => {
         }
     }).then(complex => {
         if(!complex){
-            return res.status(404).send({
-              message: `Not found. Complex with id ${IdComplex}`
-            });
+            sendResponse(res, 'false', '404', {}, `Not found. Complex`);
+        }else{
+            sendResponse(res, 'true', '200', complex);
         }
-        res.send(complex);
     }).catch(err => {
-        return res.status(400).send({
-            message: err.message || "cannot get."
-        });
+        const message = err.message || "cannot retrive."
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -79,9 +79,7 @@ exports.update = (req,res) => {
         }
     }).then(complex => {
         if(!complex){
-            return res.status(404).send({
-                message: `Not found. Complex with id ${IdComplex}`
-            });
+            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${IdComplex}`);
         }
         return Complex.update(
         {
@@ -92,18 +90,15 @@ exports.update = (req,res) => {
         },
         {
             where: {
-                IdComplex: req.body.IdComplex,
+                IdComplex: IdComplex,
                 Status: '1'
             }
         });
     }).then(result => {
-        res.send({
-            message: `Update Correct with id ${IdComplex}`
-        });
+        sendResponse(res, 'true', '200', `Update Correct with id ${IdComplex}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: "Error updating complex with id " + req.body.IdComplex
-        });
+        const message = err.message || "Error updating complex with id " + IdComplex
+        sendResponse(res, 'false', '500', {}, message);
     });
 }
 
@@ -117,9 +112,7 @@ exports.delete = (req,res) => {
         }
     }).then(complex => {
         if(!complex){
-            return res.status(404).send({
-                message: `Not found. Complex with id ${IdComplex}`
-            })
+            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${IdComplex}`);
         }
         return Complex.update(
         {
@@ -131,13 +124,10 @@ exports.delete = (req,res) => {
             }
         });
     }).then(result => {
-        res.send({
-            message: `Remove with id ${IdComplex}`
-        });
+        sendResponse(res, 'true', '200', `Remove with id ${IdComplex}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: "Error removing complex with id " + req.body.IdComplex
-        });
+        const message = err.message || "Error removing complex with id " + IdComplex
+        sendResponse(res, 'false', '500', {},message);
     });
 }
 
@@ -151,9 +141,7 @@ exports.recovery = (req,res) => {
         }
     }).then(complex => {
         if(!complex){
-            return res.status(404).send({
-                message: `Not found. Complex with id ${IdComplex}`
-            })
+            return sendResponse(res, 'false', '404', {}, `Not found. Complex with id ${IdComplex}`);
         }
         return Complex.update(
         {
@@ -161,16 +149,13 @@ exports.recovery = (req,res) => {
         },
         {
             where: {
-                IdComplex: req.body.IdComplex 
+                IdComplex: IdComplex 
             }
         });
     }).then(result => {
-        res.send({
-            message: `Recovery with id ${IdComplex}`
-        });
+        sendResponse(res, 'true', '200', `Recovery with id ${IdComplex}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: "Error recovering Complex with id " + req.body.IdComplex
-        });
+        const message = err.message || "Error recovering Complex with id " + IdComplex;
+        sendResponse(res, 'false', '500', {},message);
     });
 }

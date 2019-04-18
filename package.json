@@ -30,6 +30,6 @@
     "mysql2": "^1.6.5",
     "nodemon": "^1.18.11",
     "passport": "^0.4.0",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.43.2"
   }
 }

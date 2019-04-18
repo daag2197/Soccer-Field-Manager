@@ -2,6 +2,8 @@ const Sequelize = require("sequelize");
 var models = require("../models/");
 var League = models.League;
 const _ = require("lodash");
+const { sendResponse } = require('../services/responseHandler');
+
 
 exports.test = function(req, res) {
   console.log(req.query);
@@ -18,11 +20,9 @@ exports.create = function (req, res) {
     }
 
     League.create(league).then(doc => {
-        res.send(league);
+        sendResponse(res,'true','200',doc);
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot save."
-        });
+        sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 };
 
@@ -48,11 +48,13 @@ exports.findAll = (req, res) => {
             Status: 1
         }
     }).then(leagues => {
-        res.send({ leagues });
+        if(leagues == ""){
+            sendResponse(res, 'false', '404', {}, `Not found. leagues`);
+        }else{
+            sendResponse(res, 'true', '200', leagues);
+        }
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot retrive."
-        });
+        sendResponse(res, 'false', '400', {}, 'cannot retrive', err.message);
     });
 }
 
@@ -81,16 +83,14 @@ exports.findOne = (req, res) => {
             status: 1
         }
     }).then(league => {
-        if (!league) {
-            return res.status(404).send({
-                message: `Not found. League with id ${IdLeague}`
-            });
+        if(!league){
+            sendResponse(res, 'false', '404', {}, `Not found. league`);
+        }else{
+            sendResponse(res, 'true', '200', league);
         }
         res.send(league);
     }).catch(err => {
-        return res.status(400).send({
-            message: err.message || "cannot get."
-        });
+        sendResponse(res, 'false', '400', {}, 'cannot retrive', err.message);
     });
 }
 
@@ -104,9 +104,7 @@ exports.update = (req, res) => {
         }
     }).then(league => {
         if (!league) {
-            return res.status(404).send({
-                message: `Not found. League with id ${IdLeague}`
-            });
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${IdLeague}`);
         }
         return League.update(
             {
@@ -123,13 +121,9 @@ exports.update = (req, res) => {
                 }
             });
     }).then(result => {
-        res.send({
-            message: `Update Correct with id ${IdLeague}`
-        });
+        sendResponse(res, 'true', '200', `Update Correct with id ${IdLeague}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error updating league with id " + req.body.IdLeague
-        });
+        sendResponse(res, 'false', '500', {}, "Error updating athlete with id " + IdLeague, err.message);
     });
 }
 
@@ -142,9 +136,7 @@ exports.delete = (req, res) => {
         }
     }).then(league => {
         if (!league) {
-            return res.status(404).send({
-                message: `Not found. League with id ${IdLeague}`
-            })
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${IdLeague}`);
         }
         return League.update({
             Status: 0
@@ -155,13 +147,9 @@ exports.delete = (req, res) => {
                 }
             });
     }).then(result => {
-        res.send({
-            message: `Remmove with id ${IdLeague}`
-        })
+        sendResponse(res, 'true', '200', `Remmove with id ${IdLeague}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error removing league with id " + req.body.IdLeague
-        });
+        sendResponse(res, 'false', '500', {}, "Error removing league with id " + IdLeague, err.message);
     })
 }
 
@@ -174,9 +162,7 @@ exports.recovery = (req, res) => {
         }
     }).then(league => {
         if (!league) {
-            return res.status(404).send({
-                message: `Not found. league with id ${IdLeague}`
-            })
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${IdLeague}`);
         }
         return League.update({
             Status: 1
@@ -187,12 +173,8 @@ exports.recovery = (req, res) => {
                 }
             });
     }).then(result => {
-        res.send({
-            message: `Recover with id ${IdLeague}`
-        })
+        sendResponse(res, 'true', '200', `Recover with id ${IdLeague}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error recovering league with id " + req.body.IdLeague
-        });
+        sendResponse(res, 'false', '500', {}, "Error recovering league with id " + IdLeague, err.message);
     })
 }

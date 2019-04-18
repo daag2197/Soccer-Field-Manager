@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 var models = require('../models/');
 var Field = models.Field;
 const _ = require('lodash');
+const { sendResponse } = require('../services/responseHandler');
 
 exports.test = function (req, res) {
     console.log(req.query);
@@ -14,11 +15,9 @@ exports.create = function(req,res) {
         Complex: req.body.Complex,
     }
     Field.create(field).then(doc => {
-        res.send(field);
+        sendResponse(res,'true','200',doc);
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot save."
-        });
+        sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 }
 
@@ -38,11 +37,14 @@ exports.findAll = (req,res) => {
             Status: 1
         }
     }).then(fields => {
-        res.send({ fields });
+        if(fields == ""){
+            sendResponse(res, 'false', '404', {}, `Not found. Fields`);
+        }else{
+            sendResponse(res, 'true', '200', fields);
+        }
     }).catch(err => {
-        res.status(400).send({
-            message: err.message || "cannot retrive."
-        });
+        const message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -66,15 +68,13 @@ exports.findOne = (req,res) => {
         }
     }).then(field => {
         if(!field){
-            return res.status(404).send({
-                message: `Not found. Field with id ${IdField}`
-            });
+            sendResponse(res, 'false', '404', {}, `Not found. field`);
+        }else{
+            sendResponse(res, 'true', '200', field);
         }
-        res.send(field);
     }).catch(err => {
-        return res.status(400).send({
-            message: err.message || "cannot get."
-        });
+        const message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -88,9 +88,7 @@ exports.update = (req,res) => {
         }
     }).then(field => {
         if(!field){
-            return res.status(404).send({
-                message: `Not found. Field with id ${IdField}`
-            });
+            return sendResponse(res, 'false', '404', {}, `Not found. field`);
         }
         return Field.update(
         {
@@ -104,13 +102,10 @@ exports.update = (req,res) => {
             }
         });
     }).then(result => {
-        res.send({
-            message: `Update Correct with id ${IdField}`
-        });
+        sendResponse(res, 'true', '200',`Update Correct with id ${IdField}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error updating field with id " + req.body.IdField
-        });
+        const message = err.message || "Error updating field with id " + req.body.IdField
+        sendResponse(res, 'false', '500', {}, message);
     });
 }
 
@@ -123,9 +118,7 @@ exports.delete = (req,res) => {
         }
     }).then(field =>{
         if(!field){
-            return res.status(404).send({
-                message: `Not found. Field with id ${IdField}`
-            })
+            return sendResponse(res, 'false', '404', {}, `Not found. field`);
         }
         return Field.update({
             Status: 0
@@ -136,13 +129,10 @@ exports.delete = (req,res) => {
             }
         });
     }).then(result => {
-        res.send({
-            message: `Remmove with id ${IdField}`
-        })
+        sendResponse(res, 'true', '200', `Remmove with id ${IdField}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error removing field with id " + req.body.IdField
-        });
+        const message = err.message || "Error removing field with id " + req.body.IdField
+        sendResponse(res, 'false', '500', {}, message);
     })
 }
 
@@ -155,9 +145,7 @@ exports.recovery = (req,res) => {
         }
     }).then(field =>{
         if(!field){
-            return res.status(404).send({
-                message: `Not found. Field with id ${IdField}`
-            })
+            return sendResponse(res, 'false', '404', {}, `Not found. field`);
         }
         return Field.update({
             Status: 1
@@ -168,12 +156,9 @@ exports.recovery = (req,res) => {
             }
         });
     }).then(result => {
-        res.send({
-            message: `Recover with id ${IdField}`
-        })
+        sendResponse(res, 'true', '200', `Recover with id ${IdField}`);
     }).catch(err => {
-        return res.status(500).send({
-            message: err.message || "Error recovering field with id " + req.body.IdField
-        });
+        const message = err.message || "Error recovering field with id " + req.body.IdField
+        sendResponse(res, 'false', '500', {}, message);
     })
 }

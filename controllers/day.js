@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 var models = require('../models/');
 var Day = models.Day;
 const _ = require('lodash');
+const { sendResponse } = require('../services/responseHandler');
 
 exports.test = function (req, res) {
     console.log(req.query);
@@ -14,11 +15,9 @@ exports.create = function(req,res){
     }
     Day.create(days)
       .then(doc => {
-          res.send(days);
+        sendResponse(res,'true','200',doc);
       })
       .catch(err => {
-        res.status(400).send({
-          message: err.message || "cannot save."
-        });
+        sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
       });
 }

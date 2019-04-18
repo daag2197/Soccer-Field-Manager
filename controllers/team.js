@@ -2,6 +2,8 @@ const Sequelize = require("sequelize");
 var models = require("../models/");
 var Team = models.Team;
 const _ = require("lodash");
+const { sendResponse } = require('../services/responseHandler');
+
 
 exports.test = function(req, res) {
   console.log(req.query);
@@ -15,11 +17,9 @@ exports.create = function (req, res) {
   }
 
   Team.create(team).then(doc => {
-      res.send(team);
+      sendResponse(res,'true','200',doc);
   }).catch(err => {
-      res.status(400).send({
-          message: err.message || "cannot save."
-      });
+      sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
   });
 };
 
@@ -52,11 +52,15 @@ exports.findAll = (req, res) => {
           Status: 1
       }
   }).then(teams => {
-      res.send({ teams });
+    if(teams == ""){
+      sendResponse(res, 'false', '404', {}, `Not found. Teams`);
+    }
+    else{
+      sendResponse(res, 'true', '200', teams);
+    }
   }).catch(err => {
-      res.status(400).send({
-          message: err.message || "cannot retrive."
-      });
+      const message = err.message || "cannot retrive."
+      sendResponse(res, 'false', '400', {}, message);
   });
 }
 
@@ -92,11 +96,15 @@ exports.findOne = (req, res) => {
       Status: 1
     }
   }).then(teams => {
-    res.send({ teams });
+    if(!teams){
+      sendResponse(res, 'false', '404', {}, `Not found. Team`);
+    }
+    else{
+      sendResponse(res, 'true', '200', teams);
+    }
   }).catch(err => {
-    res.status(400).send({
-      message: err.message || "cannot retrive."
-    });
+    const message = err.message || "cannot retrive."
+    sendResponse(res, 'false', '400', {},message);
   });
 }
 
@@ -109,9 +117,7 @@ exports.update = (req,res) => {
     }
   }).then(team => {
     if(!team){
-      return res.status(404).send({
-        message: `Not found. Team with id ${IdTeam}`
-      });
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdTeam}`);
     }
     return Team.update(
       {
@@ -125,13 +131,9 @@ exports.update = (req,res) => {
         }
       });
   }).then(result => {
-    res.send({
-      message: `Update Correct with id ${IdTeam}`
-    });
+    sendResponse(res, 'true', '200', `Update Correct with id ${IdTeam}`);
   }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Error updating team with id " + IdTeam
-    });
+    sendResponse(res, 'false', '500', {}, "Error updating team with id " + IdTeam, err.message);
   });
 }
 
@@ -144,9 +146,7 @@ exports.delete = (req,res) =>{
     }
   }).then(team => {
     if (!team) {
-      return res.status(404).send({
-        message: `Not found. Team with id ${IdTeam}`
-      })
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdTeam}`);
     }
     return Team.update({
       Status: '0'
@@ -157,13 +157,9 @@ exports.delete = (req,res) =>{
       }
     });
   }).then(result => {
-    res.send({
-      message: `Remmove with id ${IdTeam}`
-    })
+    sendResponse(res, 'true', '200', `Remmove with id ${IdTeam}`);
   }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Error removing team with id " + IdTeam
-    });
+    sendResponse(res, 'false', '500', {}, "Error removing team with id " + IdTeam, err.message);
   })
 }
 
@@ -176,9 +172,7 @@ exports.recovery = (req,res) => {
     }
   }).then(team => {
     if (!team) {
-      return res.status(404).send({
-        message: `Not found. Team with id ${IdTeam}`
-      })
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${IdTeam}`);
     }
     return Team.update({
       Status: '1'
@@ -189,12 +183,8 @@ exports.recovery = (req,res) => {
       }
     });
   }).then(result => {
-    res.send({
-      message: `Recover with id ${IdTeam}`
-    })
+    sendResponse(res, 'true', '200', `Recover with id ${IdTeam}`);
   }).catch(err => {
-    return res.status(500).send({
-      message: err.message || "Error recovering team with id " + IdTeam
-    });
+    sendResponse(res, 'false', '500', {}, "Error recovering team with id " + IdTeam, err.message);
   })
 }

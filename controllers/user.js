@@ -38,7 +38,12 @@ exports.findAll = function (req, res) {
     }
   })
   .then(user => {
-    sendResponse(res, 'true', '200', user);
+    if(user == ""){
+      sendResponse(res, 'false', '404', {}, `Not found. Users`);
+    }
+    else{
+      sendResponse(res, 'true', '200', user);
+    }
   })
   .catch(err => {
     const message = err.message || "cannot retrive."
@@ -60,12 +65,17 @@ exports.findOne = function(req,res){
       }
     }],
     where: {
-      id,
+      id: id,
       Status: '1'
     }
   })
   .then(user => {
-    sendResponse(res, 'true', '200', user);
+    if(!user){
+      sendResponse(res, 'false', '404', {}, `Not found. User`);
+    }
+    else{
+      sendResponse(res, 'true', '200', user);
+    }
   })
   .catch(err => {
     const message = err.message || "cannot retrive."
