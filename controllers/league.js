@@ -54,7 +54,8 @@ exports.findAll = (req, res) => {
             sendResponse(res, 'true', '200', leagues);
         }
     }).catch(err => {
-        sendResponse(res, 'false', '400', {}, 'cannot retrive', err.message);
+        const message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -90,7 +91,8 @@ exports.findOne = (req, res) => {
         }
         res.send(league);
     }).catch(err => {
-        sendResponse(res, 'false', '400', {}, 'cannot retrive', err.message);
+        const message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 
@@ -123,7 +125,8 @@ exports.update = (req, res) => {
     }).then(result => {
         sendResponse(res, 'true', '200', `Update Correct with id ${IdLeague}`);
     }).catch(err => {
-        sendResponse(res, 'false', '500', {}, "Error updating athlete with id " + IdLeague, err.message);
+        const message = err.message ||  "Error updating league with id " + req.body.IdLeague;
+        sendResponse(res, 'false', '500', {},message);
     });
 }
 
@@ -149,7 +152,8 @@ exports.delete = (req, res) => {
     }).then(result => {
         sendResponse(res, 'true', '200', `Remmove with id ${IdLeague}`);
     }).catch(err => {
-        sendResponse(res, 'false', '500', {}, "Error removing league with id " + IdLeague, err.message);
+        const message = err.message || "Error removing league with id " + req.body.IdLeague
+        sendResponse(res, 'false', '500', {},message);
     })
 }
 

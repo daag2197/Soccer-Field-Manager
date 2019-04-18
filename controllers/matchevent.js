@@ -22,7 +22,8 @@ exports.findall = function(req,res){
             sendResponse(res, 'true', '200', matchevent);
         }
     }).catch(err => {
-        sendResponse(res, 'false', '400', {}, 'cannot retrive', err.message);
+        const message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {}, message);
     });
 }
 exports.findone = function(req,res){
@@ -39,7 +40,8 @@ exports.findone = function(req,res){
             sendResponse(res, 'true', '200', matchevent);
         }
     }).catch(err => {
-        sendResponse(res, 'false', '400', {}, 'cannot retrive', err.message);
+        const message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {},message);
     });
 }
 exports.update = function(req,res){
@@ -67,7 +69,8 @@ exports.update = function(req,res){
     }).then(result => { 
        sendResponse(res, 'true', '200', `Update Correct with id ${IdMatchEvent}`);
     }).catch(err => {
-        sendResponse(res, 'false', '500', {}, "Error updating Match event with id " + IdMatchEvent, err.message);
+        const message = err.message || "Error updating Match event with id " + IdMatchEvent;
+        sendResponse(res, 'false', '500', {},message);
     });
 }
 exports.delete = function(req,res){
@@ -93,7 +96,8 @@ exports.delete = function(req,res){
     }).then(result => { 
        sendResponse(res, 'true', '200', `Remmove with id ${IdMatchEvent}`);
     }).catch(err => {
-        sendResponse(res, 'false', '500', {}, "Error removing Match event with id " + IdMatchEvent, err.message);
+        const message = err.message || "Error removing Match event with id " + IdMatchEvent;
+        sendResponse(res, 'false', '500', {}, message);
     });
 }
 exports.recovery = function(req,res){
@@ -119,6 +123,7 @@ exports.recovery = function(req,res){
     }).then(result => { 
        sendResponse(res, 'true', '200', `Recover with id ${IdMatchEvent}`);
     }).catch(err => {
-        sendResponse(res, 'false', '500', {}, "Error recovering Match event with id " + IdMatchEvent, err.message);
+        const message = err.message || "Error recovering Match event with id " + IdMatchEvent;
+        sendResponse(res, 'false', '500', {}, message);
     });
 }

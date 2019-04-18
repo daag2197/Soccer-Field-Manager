@@ -133,7 +133,8 @@ exports.update = (req,res) => {
   }).then(result => {
     sendResponse(res, 'true', '200', `Update Correct with id ${IdTeam}`);
   }).catch(err => {
-    sendResponse(res, 'false', '500', {}, "Error updating team with id " + IdTeam, err.message);
+    const message = err.message || "Error updating team with id " + IdTeam;
+    sendResponse(res, 'false', '500', {},message);
   });
 }
 
@@ -159,7 +160,8 @@ exports.delete = (req,res) =>{
   }).then(result => {
     sendResponse(res, 'true', '200', `Remmove with id ${IdTeam}`);
   }).catch(err => {
-    sendResponse(res, 'false', '500', {}, "Error removing team with id " + IdTeam, err.message);
+    const message = err.message || "Error removing team with id " + IdTeam;
+    sendResponse(res, 'false', '500', {},message);
   })
 }
 
@@ -185,6 +187,7 @@ exports.recovery = (req,res) => {
   }).then(result => {
     sendResponse(res, 'true', '200', `Recover with id ${IdTeam}`);
   }).catch(err => {
-    sendResponse(res, 'false', '500', {}, "Error recovering team with id " + IdTeam, err.message);
+    const message = err.message ||  "Error recovering team with id " + IdTeam;
+    sendResponse(res, 'false', '500', {},message);
   })
 }
