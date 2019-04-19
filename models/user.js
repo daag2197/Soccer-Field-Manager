@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     User.belongsTo(models.UserType, {as: "User Type",foreignKey: "UserType"});
     User.hasMany(models.Athlete,{foreignKey: "User"});
+    User.hasMany(models.Match,{foreignKey: 'Referee'});
   };
 
   // Class method

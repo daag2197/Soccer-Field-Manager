@@ -12,6 +12,7 @@ const UserTypeRoute = require('./usertype');
 const UserRoute = require('./user'); 
 const AthletesRoute = require('./athlete');
 const MatchEventRoute = require('./matchevent');
+const Match = require('./match');
 
 router.get('/', (req, res) => {
   res.send('Bienvenido a Inicio!');
@@ -28,5 +29,6 @@ router.use('/usertype',UserTypeRoute);
 router.use('/user',UserRoute);
 router.use('/athlete',AthletesRoute);
 router.use('/matchevent',MatchEventRoute);
+router.use('/match',Match);
 
 module.exports = router;

@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   Field.associate = function(models) {
     // associations can be defined here
     Field.belongsTo(models.Complex, { as: 'Complex Detail',foreignKey: 'Complex' });
+    Field.hasMany(models.Match, {foreignKey: 'Field' });
   };
   return Field;
 };

@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Team.belongsTo(models.League, { as: 'League Detail',foreignKey: 'League' });
     Team.hasMany(models.Athlete,{foreignKey: 'Team'});
+    Team.hasMany(models.Match,{foreignKey: 'Local'});
+    Team.hasMany(models.Match,{foreignKey: 'Guest' });
   };
   return Team;
 };

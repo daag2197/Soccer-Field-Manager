@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Match.associate = function(models) {
     // associations can be defined here
+    Match.belongsTo(models.Field, { as: 'IdField',foreignKey: 'Field' });
+    Match.belongsTo(models.League,{ as: 'IdLeague',foreignKey: 'League'});
+    Match.belongsTo(models.Team,{ as: 'IdLocal',foreignKey: 'Local'});
+    Match.belongsTo(models.Team,{as: 'IdGuest', foreignKey: 'Guest' });
+    Match.belongsTo(models.User,{ as: 'IdReferee', foreignKey: 'Referee'});
   };
   return Match;
 };
