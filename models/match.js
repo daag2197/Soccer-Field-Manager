@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     Winner: DataTypes.INTEGER,
     IsDraw: DataTypes.BOOLEAN,
     StartGame: DataTypes.TIME,
-    EndGame: DataTypes.TIME
+    EndGame: DataTypes.TIME,
+    Status: DataTypes.BOOLEAN
   }, {});
   Match.associate = function(models) {
     // associations can be defined here

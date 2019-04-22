@@ -9,9 +9,8 @@ Routes.post('/',Match.create);
 //Show All
 Routes.get('/findall',Match.findAll);
 
-/*
 //Search One
-Routes.get('/:id',Match.findone);
+Routes.get('/:id',Match.findOne);
 
 //Delete
 Routes.put('/delete/:id',Match.delete);
@@ -20,7 +19,7 @@ Routes.put('/delete/:id',Match.delete);
 Routes.put('/:id',Match.update);
 
 //Recovery
-Routes.put('/recovery/:id',Match.recovery);*/
+Routes.put('/recovery/:id',Match.recovery);
 
 
 module.exports = Routes;
