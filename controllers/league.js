@@ -89,7 +89,6 @@ exports.findOne = (req, res) => {
         }else{
             sendResponse(res, 'true', '200', league);
         }
-        res.send(league);
     }).catch(err => {
         const message = err.message || 'cannot retrive';
         sendResponse(res, 'false', '400', {},message);

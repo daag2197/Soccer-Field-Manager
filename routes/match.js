@@ -5,10 +5,11 @@ const Routes = express.Router();
 
 //Create 
 Routes.post('/',Match.create);
-/*
-//Show All
-Routes.get('/findall',Match.findall);
 
+//Show All
+Routes.get('/findall',Match.findAll);
+
+/*
 //Search One
 Routes.get('/:id',Match.findone);
 

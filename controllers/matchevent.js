@@ -14,7 +14,7 @@ exports.create = function(req,res){
         sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
 }
-exports.findall = function(req,res){
+exports.findAll = function(req,res){
     MatchEvent.findAll({ where: {Active: '1'} }).then(matchevent =>{
         if(matchevent == ""){
             sendResponse(res, 'false', '404', {}, `Not found. Match Events`);
@@ -26,7 +26,7 @@ exports.findall = function(req,res){
         sendResponse(res, 'false', '400', {}, message);
     });
 }
-exports.findone = function(req,res){
+exports.findOne = function(req,res){
     let id = req.params.id
     MatchEvent.findOne({
         where: {

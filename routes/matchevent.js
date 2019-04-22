@@ -7,10 +7,10 @@ const Routes = express.Router();
 Routes.post('/',MatchEvent.create);
 
 //Show All
-Routes.get('/findall',MatchEvent.findall);
+Routes.get('/findall',MatchEvent.findAll);
 
 //Search One
-Routes.get('/:id',MatchEvent.findone);
+Routes.get('/:id',MatchEvent.findOne);
 
 //Delete
 Routes.put('/delete/:id',MatchEvent.delete);
