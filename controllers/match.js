@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const models = require("../models/");
 const Match = models.Match;
+const MatchDetail = models.MatchDetail;
 const _ = require("lodash");
 const { sendResponse } = require('../services/responseHandler');
 
@@ -21,23 +22,6 @@ exports.create = function(req,res){
     }).catch(err => {
         sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
     });
-    // models.Field.findOne({
-    //     where:{
-    //         id: match.Field,
-    //         Status: 1
-    //     }
-    // }).then(field =>{
-    //     if(!field){
-    //         return sendResponse(res, 'false', '404', {}, 'Field not exist', err.message);
-    //     }
-    //     return Match.create(match).then(doc => {
-    //         sendResponse(res,'true','200',doc);
-    //     }).catch(err => {
-    //         sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
-    //     });
-    // }).catch(err => {
-    //     sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
-    // });
 }
 
 exports.findAll =  function(req,res){
@@ -262,8 +246,21 @@ exports.delete = function(req,res){
                 Status: 1
             }
         }).then(result => { 
-            message = `Remmove Correct with id ${id}`
-            sendResponse(res, 'true', '200', message);
+            return MatchDetail.update({
+                Status: 0
+            },
+            {
+                where:{
+                    IdMatch: id,
+                    Status: 1
+                }
+            }).then(result => {
+                message = `Remmove Correct with id ${id}`
+                sendResponse(res, 'true', '200', message);
+            }).catch(err => {
+                message = err.message || "Error removing Match with id " + id;
+                sendResponse(res, 'false', '400', {},message);
+            });
         }).catch(err => {
             message = err.message || "Error removing Match with id " + id;
             sendResponse(res, 'false', '400', {},message);
@@ -274,36 +271,3 @@ exports.delete = function(req,res){
     });
 }
 
-exports.recovery = function(req,res){
-    var message = ""; 
-    let id = req.params.id;
-    Match.findOne({
-        where: {
-            id,
-            Status: 0
-        }
-    }).then(match => {
-        if(!match){
-            message = `Not found. Match with id ${id}`;
-            return sendResponse(res, 'false', '404', {},message);
-        }
-        return Match.update({
-            Status: 1
-        },
-        {
-            where: {
-                id,
-                Status: 0
-            }
-        }).then(result => { 
-            message = `Recover Correct with id ${id}`
-            sendResponse(res, 'true', '200', message);
-        }).catch(err => {
-            message = err.message || "Error recovering Match with id " + id;
-            sendResponse(res, 'false', '400', {},message);
-        });
-    }).catch(err => {
-        message = err.message || "Error recovering Match with id " + id;
-        sendResponse(res, 'false', '400', {},message);
-    });
-}

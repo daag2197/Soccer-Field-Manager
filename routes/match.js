@@ -18,8 +18,4 @@ Routes.put('/delete/:id',Match.delete);
 //Update
 Routes.put('/:id',Match.update);
 
-//Recovery
-Routes.put('/recovery/:id',Match.recovery);
-
-
 module.exports = Routes;
