@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const models = require("../models/");
+const querystring = require('querystring');
 const User = models.User;
 const _ = require("lodash");
 const { sendResponse } = require('../services/responseHandler');
@@ -22,33 +23,23 @@ exports.create = function (req, res) {
 };
 
 exports.findAll = function (req, res) {
-  User.findAll({
-    attributes: {
-      exclude: ["Status", "Password", "UserType"]
-    },
-    include: [{
-      model: models.UserType,
-      as: "User Type",
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "Status"]
-      }
-    }],
-    where: {
-      Status: '1'
-    }
-  })
-  .then(user => {
-    if(user == ""){
-      sendResponse(res, 'false', '404', {}, `Not found. Users`);
-    }
-    else{
-      sendResponse(res, 'true', '200', user);
-    }
-  })
-  .catch(err => {
-    const message = err.message || "cannot retrive."
-    sendResponse(res, 'false', '400', {}, message);
-  });
+  let limit = 8;
+  let str = req.url.split('?')[1];
+  let off = querystring.parse(str);
+  if(off.offset == undefined) {
+    off = 0;
+  } else {
+    off = off.offset*limit;
+  };
+  User.findAndCountAll({
+    offset: off, limit,
+  }).then((users) => {
+      sendResponse(res, 'true', '200', users); //.map(user => user.toJS()));
+    }).catch((err) => {
+      sendResponse(res, 'false', '404', err, err.message);
+    });
+
+
 };
 
 exports.findOne = function(req,res){

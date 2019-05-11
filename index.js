@@ -1,23 +1,18 @@
-const express = require('express')
-const app = express();
+const express = require('express');
+const bodyParser = require('body-parser');
 require('dotenv').config();
-const Morgan = require('morgan')
-const bodyParser  = require('body-parser')
-const passport = require('passport')
-const cors = require('cors')
-const router = require('./routes');
+const cors = require('cors');
 
-// Ajustes de Puerto para servidor local
-app.set('port',process.env.PORT || 3000)
-// Respuesta en Consola
-app.use(Morgan('dev'));
-// Midlewares
+const app = express();
+app.use(cors());
+const routes = require('./routes');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(routes);
 
-// Rutas de las diferentes tablas
-app.use(router);
-
-app.listen(app.get('port'),() => {
-  console.log("Servidor en el Puerto 3000");
-})
+// Listen to the App Engine-specified port, or 8080 otherwise
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`);
+});

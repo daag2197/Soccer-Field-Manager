@@ -1,12 +1,12 @@
 const db = require('../models/index');
-const jwt = require('../services/responseHandler');
-const responseHandler = require('../services/response');
+const jwt = require('../services/JWT');
+const responseHandler = require('../services/responseHandler');
 const User = db.User;
 
 const authenticate = async (req, res, next) => {
   let token = req.header('Authorization');
   if (token) {
-    token = token.split('Bearer ')[1];
+    token = token.split(' ')[1];
     if (jwt.verify(token)) {
       const decoded = jwt.decode(token);
       const exp = new Date(decoded.payload.exp * 1000);
@@ -14,7 +14,39 @@ const authenticate = async (req, res, next) => {
       if (exp > current) {
         await User.findOne({ where: { id: decoded.payload.data._id } })
           .then((user) => {
-            if (user.status) {
+            if (user.Status) {
+              req.id = user.id;
+              req.token = token;
+              next();
+            } else {
+              responseHandler.sendResponse(res, 'false', '400', {}, 'El usuario no existe');
+            }
+          }).catch((err) => {
+            responseHandler.sendResponse(res, 'false', '401', {}, 'Error en el usuario', err.message);
+          });
+      } else {
+        responseHandler.sendResponse(res, 'false', '401', {}, 'El token ha caducado');
+      }
+    } else {
+      responseHandler.sendResponse(res, 'false', '401', {}, 'Token inválido');
+    }
+  } else {
+    responseHandler.sendResponse(res, 'false', '400', {}, 'No se recibio ningun token');
+  }
+};
+
+const adminAuthenticate = async (req, res, next) => {
+  let token = req.header('Authorization');
+  if (token) {
+    token = token.split(' ')[1];
+    if (jwt.verify(token)) {
+      const decoded = jwt.decode(token);
+      const exp = new Date(decoded.payload.exp * 1000);
+      const current = new Date();
+      if (exp > current) {
+        await User.findOne({ where: { id: decoded.payload.data._id } })
+          .then((user) => {
+            if (user.Status) {
               req.id = user.id;
               req.token = token;
               next();
@@ -37,4 +69,5 @@ const authenticate = async (req, res, next) => {
 
 module.exports = {
   authenticate,
+  adminAuthenticate
 };

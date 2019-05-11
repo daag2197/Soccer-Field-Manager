@@ -17,9 +17,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       SecondLastName: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       Email: {
+        allowNull: false,
+        unique: 'uniqueMail',
         type: Sequelize.STRING
       },
       Password: {
@@ -34,6 +37,7 @@ module.exports = {
         }
       },
       Path: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       Status: {

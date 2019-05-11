@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     // associations can be defined here
     User.belongsTo(models.UserType, {as: "User Type",foreignKey: "UserType"});
-    User.hasMany(models.Athlete,{foreignKey: "User"});
-    User.hasMany(models.Match,{foreignKey: 'Referee'});
+    User.hasMany(models.Athlete, {foreignKey: "User"});
+    User.hasMany(models.Match, {foreignKey: 'Referee'});
   };
 
   // Class method
@@ -56,12 +56,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Hooks
-  User.beforeSave((user, options) => {
-    const saltRounds = 10;
-    bcrypt.hash(user.Password, saltRounds, function(err, hash) {
-      user.Password = hash;
-    });
-    
+  User.beforeSave((user) => {
+    user.Password = user.Password && user.Password != '' ? bcrypt.hashSync(user.Password, 10) : '';
   });
 
 

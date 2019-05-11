@@ -1,13 +1,14 @@
 const express = require("express");
 const User = require("../controllers/user");
+const { adminAuthenticate, authenticate } = require('../middleware/auth');
 
 const Routes = express.Router();
 
 Routes.post('/', User.create);
 
-Routes.get('/findall', User.findAll);
+Routes.get('/', adminAuthenticate, User.findAll);
 
-Routes.get('/:id',User.findOne);
+// Routes.get('/:id', User.findOne);
 
 Routes.put('/:id', User.update);
 
