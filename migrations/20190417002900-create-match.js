@@ -49,8 +49,11 @@ module.exports = {
         }
       },
       Winner: {
-        allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Teams',
+          key: 'id'
+        }
       },
       IsDraw: {
         allowNull: false,

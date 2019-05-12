@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     Match.belongsTo(models.League,{ as: 'IdLeague',foreignKey: 'League'});
     Match.belongsTo(models.Team,{ as: 'IdLocal',foreignKey: 'Local'});
     Match.belongsTo(models.Team,{as: 'IdGuest', foreignKey: 'Guest' });
+    Match.belongsTo(models.Team,{as: 'IdWinner', foreignKey: 'Winner' });
     Match.belongsTo(models.User,{ as: 'IdReferee', foreignKey: 'Referee'});
     Match.hasMany(models.MatchDetail,{foreignKey: 'IdMatch'});
   };
