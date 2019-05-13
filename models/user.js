@@ -23,16 +23,16 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Class method
-  User.findByCredentials = function findByCredentials(email, password) {
+  User.findByCredentials = function findByCredentials(Email, Password) {
     const U = this;
     return U.findOne({
-      where: { email },
+      where: { Email },
     }).then((user) => {
       if (!user) {
         return Promise.reject( {message: 'Verify user'} );
       }
       return new Promise((resolve, reject) => {
-        bcrypt.compare(password, user.password, (err, res) => {
+        bcrypt.compare(Password, user.Password, (err, res) => {
           if (res) {
             resolve(user);
           } else {
