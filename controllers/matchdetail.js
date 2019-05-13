@@ -107,6 +107,51 @@ exports.findOne = function(req,res){
     });
 }
 
+//Detalles del Partido por Id detalle
+exports.findOneById = function(req,res){
+    var message = "";
+    let id = req.params.id
+    MatchDetail.findAll({
+       include:[
+        {
+            model: models.Team,
+            as: 'IdTeam',
+            attributes:{
+                exclude: ['createdAt', 'updatedAt','Status','League']
+            } 
+        },
+        {
+            model: models.User,
+            attributes:{
+                exclude: ['createdAt', 'updatedAt','Status','Password','Email','UserType']
+            }
+        },
+        {
+            model: models.MatchEvent,
+            attributes:{
+                exclude: ['createdAt', 'updatedAt','Active']
+            } 
+        }],
+        attributes: {
+            exclude: ['createdAt', 'updatedAt','Status','Team','Event','Player']
+        },
+        where:{
+            id: id,
+            Status: 1
+        }
+    }).then(matchdetail => {
+        if(matchdetail == ""){
+            message = `Not found. Match detail`
+            sendResponse(res, 'false', '404', {},message);
+        }else{
+            sendResponse(res, 'true', '200', matchdetail);
+        }
+    }).catch(err => {
+        message = err.message || 'cannot retrive';
+        sendResponse(res, 'false', '400', {},message);
+    });
+}
+
 //Actualizar Detalle del Partido
 exports.update = function(req,res){
     var message = ""; 

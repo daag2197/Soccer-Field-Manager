@@ -12,6 +12,9 @@ Routes.get('/',MatchDetail.findAll);
 //Search One
 Routes.get('/:id',MatchDetail.findOne);
 
+//Search One by id matchdetail
+Routes.get('/findOneById/:id',MatchDetail.findOneById);
+
 //Delete
 Routes.put('/delete/:id',MatchDetail.delete);
 
