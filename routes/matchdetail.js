@@ -7,7 +7,7 @@ const Routes = express.Router();
 Routes.post('/',MatchDetail.create);
 
 //Show All
-Routes.get('/findall',MatchDetail.findAll);
+Routes.get('/',MatchDetail.findAll);
 
 //Search One
 Routes.get('/:id',MatchDetail.findOne);
