@@ -15,6 +15,8 @@ const MatchEventRoute = require('./matchevent');
 const Match = require('./match');
 const MatchDetail = require('./matchdetail');
 
+const userController = require('../controllers/user');
+
 router.get('/', (req, res) => {
   res.send('Bienvenido a Inicio!');
 });
@@ -32,5 +34,7 @@ router.use('/athlete',AthletesRoute);
 router.use('/matchevent',MatchEventRoute);
 router.use('/match',Match);
 router.use('/matchdetail',MatchDetail);
+
+router.post('/login', userController.login);
 
 module.exports = router;
