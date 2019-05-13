@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.UserType, {as: "User Type",foreignKey: "UserType"});
     User.hasMany(models.Athlete, {foreignKey: "User"});
     User.hasMany(models.Match, {foreignKey: 'Referee'});
+    User.hasMany(models.MatchDetail,{foreignKey: 'Player'});
   };
 
   // Class method

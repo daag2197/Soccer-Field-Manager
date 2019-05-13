@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   MatchEvent.associate = function(models) {
     // associations can be defined here
+    MatchEvent.hasMany(models.MatchDetail,{foreignKey: 'Event'});
   };
   return MatchEvent;
 };
