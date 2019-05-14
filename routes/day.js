@@ -7,4 +7,6 @@ Routes.get('/test', Day.test);
 
 Routes.post('/', Day.create);
 
+Routes.get('/',Day.findall);
+
 module.exports = Routes;
