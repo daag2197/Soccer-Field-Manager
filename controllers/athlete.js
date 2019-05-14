@@ -171,14 +171,14 @@ exports.update = function(req,res){
             }
         }).then(result => {
             const message =  `Update Correct with id ${id}`
-            sendResponse(res, 'true', '200',message);
+            sendResponse(res, 'true', '200', message);
         }).catch(err => {
             const message = err.message || "Error updating athlete with id " + id;
-            sendResponse(res, 'false', '400', {},message);
+            sendResponse(res, 'false', '400', {}, message);
         });
     }).catch(err => {
         const message = err.message || "Error updating athlete with id " + id;
-        sendResponse(res, 'false', '400', {},message);
+        sendResponse(res, 'false', '400', {}, message);
     });
 }
 
@@ -202,14 +202,14 @@ exports.delete = function(req,res){
             }
         }).then(result => {
             const message =  `Remmove with id ${id}`
-            sendResponse(res, 'true', '200',message);
+            sendResponse(res, 'true', '200', message);
         }).catch(err => {
             const message = err.message || "Error removing athlete with id " + id;
-            sendResponse(res, 'false', '400', {},message);
+            sendResponse(res, 'false', '400', {}, message);
         });
     }).catch(err => {
         const message = err.message || "Error removing athlete with id " + id;
-        sendResponse(res, 'false', '400', {},message);
+        sendResponse(res, 'false', '400', {}, message);
     });
 }
 
@@ -233,13 +233,13 @@ exports.recovery = function(req,res){
             }
         }).then(result => {
             const message = `Recover with id ${id}`
-            sendResponse(res, 'true', '200',message);
+            sendResponse(res, 'true', '200', message);
         }).catch(err => {
             const message = err.message || "Error recovering athlete with id " + id;
-            sendResponse(res, 'false', '400', {},message);
+            sendResponse(res, 'false', '400', {}, message);
         });
     }).catch(err => {
         const message = err.message || "Error recovering athlete with id " + id;
-        sendResponse(res, 'false', '400', {},message);
+        sendResponse(res, 'false', '400', {}, message);
     });
 }

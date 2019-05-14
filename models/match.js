@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     Referee: DataTypes.INTEGER,
     Winner: DataTypes.INTEGER,
     IsDraw: DataTypes.BOOLEAN,
+    GameDay: DataTypes.DATE,
     StartGame: DataTypes.TIME,
     EndGame: DataTypes.TIME,
     Status: DataTypes.BOOLEAN
@@ -15,12 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   Match.associate = function(models) {
     // associations can be defined here
     Match.belongsTo(models.Field, { as: 'IdField',foreignKey: 'Field' });
-    Match.belongsTo(models.League,{ as: 'IdLeague',foreignKey: 'League'});
-    Match.belongsTo(models.Team,{ as: 'IdLocal',foreignKey: 'Local'});
-    Match.belongsTo(models.Team,{as: 'IdGuest', foreignKey: 'Guest' });
-    Match.belongsTo(models.Team,{as: 'IdWinner', foreignKey: 'Winner' });
-    Match.belongsTo(models.User,{ as: 'IdReferee', foreignKey: 'Referee'});
-    Match.hasMany(models.MatchDetail,{foreignKey: 'IdMatch'});
+    Match.belongsTo(models.League,{ as: 'IdLeague',foreignKey: 'League' });
+    Match.belongsTo(models.Team,{ as: 'IdLocal',foreignKey: 'Local' });
+    Match.belongsTo(models.Team,{ as: 'IdGuest', foreignKey: 'Guest' });
+    Match.belongsTo(models.Team,{ as: 'IdWinner', foreignKey: 'Winner' });
+    Match.belongsTo(models.User,{ as: 'IdReferee', foreignKey: 'Referee' });
+    Match.hasMany(models.MatchDetail,{ foreignKey: 'IdMatch' });
   };
   return Match;
 };

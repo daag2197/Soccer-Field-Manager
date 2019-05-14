@@ -60,6 +60,10 @@ module.exports = {
         defaultValue: '1',
         type: Sequelize.BOOLEAN
       },
+      GameDay: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
       StartGame: {
         allowNull: false,
         type: Sequelize.TIME

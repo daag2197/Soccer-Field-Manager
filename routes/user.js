@@ -12,7 +12,7 @@ Routes.get('/:id', User.findOne);
 
 Routes.put('/:id', authenticate, User.update);
 
-Routes.put('/delete/:id', authenticate, User.delete);
+Routes.put('/delete/:id', adminAuthenticate, User.delete);
 
 // Routes.put('/recovery/:id', User.recovery);
 
