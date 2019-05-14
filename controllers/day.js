@@ -21,3 +21,22 @@ exports.create = function(req,res){
         sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
       });
 }
+//FIND ALL
+exports.findall = function(req,res){
+  let message = "";
+  Day.findAll({
+    attributes: {
+      exclude: ['createdAt','updatedAt']
+    }
+  }).then(day => {
+    if(day == ""){
+      message =`Not found. Days`
+      sendResponse(res, 'false', '404', {}, message);
+    }else{
+        sendResponse(res, 'true', '200', day);
+    }
+}).catch(err => {
+    message = err.message || 'cannot retrive';
+    sendResponse(res, 'false', '400', {},message);
+});
+}
