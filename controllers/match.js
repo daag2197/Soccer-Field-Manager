@@ -280,6 +280,51 @@ exports.results = (req, res) => {
     where: {
       id,
       status: 1,
+    }
+  }).then(async (match) => {
+    if (!match) sendResponse(res, 'false', '404', {}, 'Partido no encontrado');
+    const localGoals = await MatchDetail.findAndCountAll({
+      where: {
+        IdMatch: match.id,
+        Event: matchEvents.goals,
+        Status: 1,
+        Team: match.Local,
+      },
+    })
+
+    const guestGoals = await MatchDetail.findAndCountAll({
+      where: {
+        IdMatch: match.id,
+        Event: matchEvents.goals,
+        Status: 1,
+        Team: match.Guest,
+      },
+    })
+
+    const objRes = {
+      match: {
+        id: match.id,
+        local: match.Local,
+        guest: match.Guest,
+        winner: match.Winner,
+        isDraw: match.IsDraw,
+      },
+      localGoals: localGoals.count,
+      guestGoals: guestGoals.count,
+    };
+
+    sendResponse(res, 'true', '200', objRes);
+  }).catch((err) => {
+    sendResponse(res, 'false', '404', {}, 'Error al buscar el partido', err.message);
+  });
+};
+
+exports.resultsDetail = (req, res) => {
+  id = req.params.id;
+  Match.findOne({
+    where: {
+      id,
+      status: 1,
     },
     attributes: ['id', 'GameDay', 'StartGame', 'EndGame'],
     include: [{
