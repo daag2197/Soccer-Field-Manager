@@ -16,11 +16,11 @@ module.exports = {
           key: 'id'
         }
       },
-      League: {
+      Season: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Leagues',
+          model: 'Seasons',
           key: 'id'
         }
       },
@@ -57,7 +57,7 @@ module.exports = {
       },
       IsDraw: {
         allowNull: false,
-        defaultValue: '1',
+        defaultValue: '0',
         type: Sequelize.BOOLEAN
       },
       GameDay: {
@@ -69,7 +69,7 @@ module.exports = {
         type: Sequelize.TIME
       },
       EndGame: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.TIME
       },
       Status: {

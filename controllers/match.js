@@ -9,21 +9,12 @@ const MatchDetail = models.MatchDetail;
 
 
 exports.create = function (req, res) {
-  let match = {
-    Field: req.body.Field,
-    League: req.body.League,
-    Local: req.body.Local,
-    Guest: req.body.Guest,
-    Referee: req.body.Referee,
-    Winner: req.body.Winner,
-    IsDraw: req.body.IsDraw,
-    StartGame: req.body.StartGame,
-    EndGame: req.body.EndGame
-  }
-  Match.create(match).then(doc => {
-    sendResponse(res, 'true', '200', doc);
-  }).catch(err => {
-    sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
+  const body = req.body;
+  const match = Match.build(body);
+  match.saver().then((m) => {
+    sendResponse(res, 'true', '200', m);
+  }).catch((err) => {
+    sendResponse(res, 'false', '400', {}, 'No pudo crearse el partido.', err.message);
   });
 };
 
@@ -290,8 +281,7 @@ exports.results = (req, res) => {
         Status: 1,
         Team: match.Local,
       },
-    })
-
+    });
     const guestGoals = await MatchDetail.findAndCountAll({
       where: {
         IdMatch: match.id,
@@ -299,8 +289,7 @@ exports.results = (req, res) => {
         Status: 1,
         Team: match.Guest,
       },
-    })
-
+    });
     const objRes = {
       match: {
         id: match.id,
@@ -312,7 +301,6 @@ exports.results = (req, res) => {
       localGoals: localGoals.count,
       guestGoals: guestGoals.count,
     };
-
     sendResponse(res, 'true', '200', objRes);
   }).catch((err) => {
     sendResponse(res, 'false', '404', {}, 'Error al buscar el partido', err.message);
