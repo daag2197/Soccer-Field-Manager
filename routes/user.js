@@ -14,6 +14,6 @@ Routes.put('/:id', authenticate, User.update);
 
 Routes.put('/delete/:id', adminAuthenticate, User.delete);
 
-Routes.get('/type/referee', User.findAllRef);
+Routes.get('/type/:id', User.findbyTypeUser);
 
 module.exports = Routes;

@@ -211,7 +211,8 @@ exports.recovery = function(req,res){
   });
 }
 
-exports.findAllRef = function (req, res) {
+exports.findbyTypeUser = function (req, res) {
+  let id = req.params.id;
   let limit = 8;
   let str = req.url.split('?')[1];
   let off = querystring.parse(str);
@@ -235,7 +236,7 @@ exports.findAllRef = function (req, res) {
     }],
     where: {
       Status: '1',
-      UserType: 4
+      UserType: id
     }
   }).then((users) => {
       sendResponse(res, 'true', '200', users); 
