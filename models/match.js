@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Match = sequelize.define('Match', {
     Field: DataTypes.INTEGER,
+    Season: DataTypes.INTEGER,
     Local: DataTypes.INTEGER,
     Guest: DataTypes.INTEGER,
     Referee: DataTypes.INTEGER,

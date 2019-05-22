@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Season.associate = function(models) {
     // associations can be defined here
-    Season.belongsTo(models.Tournament,{ foreignKey: 'Tournament' });
+    // Season.belongsTo(models.tournament,{ foreignKey: 'Tournament' });
+    Season.hasMany(models.Match,{ foreignKey: 'Season'});
   };
   return Season;
 };

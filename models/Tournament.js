@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Tournament.associate = function(models) {
     // associations can be defined here
-    Tournament.belongsTo(models.League,{ foreignKey: 'League' });
+    Tournament.belongsTo(models.League,{ as:'idLeague', foreignKey: 'League' });
   };
   return Tournament;
 };
