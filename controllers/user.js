@@ -118,8 +118,6 @@ exports.findAll = function (req, res) {
     }).catch((err) => {
       sendResponse(res, 'false', '404', {}, 'Error al mostrar los usuarios', err.message);
     });
-
-
 };
 
 const returnDetail = async (req, res, id) => {
@@ -213,3 +211,35 @@ exports.recovery = function(req,res){
   });
 }
 
+exports.findAllRef = function (req, res) {
+  let limit = 8;
+  let str = req.url.split('?')[1];
+  let off = querystring.parse(str);
+  if(off.offset == undefined) {
+    off = 0;
+  } else {
+    off = off.offset*limit;
+  };
+  // User.findAndCountAll({
+    // offset: off, limit,
+  User.findAll({
+    attributes: {
+      exclude: ["Status", "Password", "UserType"]
+    },
+    include: [{
+      model: models.UserType,
+      as: "User Type",
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "Status"]
+      }
+    }],
+    where: {
+      Status: '1',
+      UserType: 4
+    }
+  }).then((users) => {
+      sendResponse(res, 'true', '200', users); 
+    }).catch((err) => {
+      sendResponse(res, 'false', '404', {}, 'Error al mostrar los usuarios', err.message);
+    });
+};

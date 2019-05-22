@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 var models = require("../models/");
 var League = models.League;
+var Teams = models.Team;
 const _ = require("lodash");
 const { sendResponse } = require('../services/responseHandler');
 
@@ -92,6 +93,43 @@ exports.findOne = (req, res) => {
     }).catch(err => {
         const message = err.message || 'cannot retrive';
         sendResponse(res, 'false', '400', {},message);
+    });
+}
+
+exports.findTeamsByIdLeague = (req,res) => {
+    let id = req.params.id;
+    League.findOne({
+        attributes: {
+            exclude: ['StartDate','EndDate','Complex','GameDay','Status','createdAt', 'updatedAt']
+        },
+        where: {
+            id,
+            Status: '1'
+        }
+    }).then(league => {
+        if(!league) {
+            return sendResponse(res, 'false', '404', {}, `Not found. League with id ${id}`);
+        }
+        return Teams.findAll({
+            attributes: {
+                exclude: ['League','Status','createdAt', 'updatedAt']
+            },
+            where: {
+                League: id,
+                Status: 1
+            }
+        }).then(teams => {
+            const ObjTeam = {
+                league,
+                teams: teams
+            }
+            sendResponse(res, 'true', '200', ObjTeam);
+        }).catch(err => {
+            const message = err.message ||  "Error looking with IdLeague " + id;
+            sendResponse(res, 'false', '400', {},message);
+        });
+    }).catch((err) => {
+        sendResponse(res, 'false', '400', {}, 'Error in route', err.message);
     });
 }
 

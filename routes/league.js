@@ -23,4 +23,7 @@ Routes.put('/delete/:id', League.delete);
 //Recovery
 Routes.put('/recovery/:id', League.recovery);
 
+//FindTeamsById
+Routes.get('/:id/teams',League.findTeamsByIdLeague);
+
 module.exports = Routes;

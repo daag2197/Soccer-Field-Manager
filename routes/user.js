@@ -14,6 +14,6 @@ Routes.put('/:id', authenticate, User.update);
 
 Routes.put('/delete/:id', adminAuthenticate, User.delete);
 
-// Routes.put('/recovery/:id', User.recovery);
+Routes.get('/type/referee', User.findAllRef);
 
 module.exports = Routes;

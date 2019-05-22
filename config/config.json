@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "root",
+    "password": "2632",
     "database": "db_smf",
     "host": "localhost",
     "dialect": "mysql"

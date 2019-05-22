@@ -1,6 +1,9 @@
 const Sequelize = require("sequelize");
 var models = require("../models/");
 var Team = models.Team;
+var Athlete = models.Athlete;
+var User = models.User;
+
 const _ = require("lodash");
 const { sendResponse } = require('../services/responseHandler');
 
@@ -105,6 +108,50 @@ exports.findOne = (req, res) => {
   }).catch(err => {
     const message = err.message || "cannot retrive."
     sendResponse(res, 'false', '400', {},message);
+  });
+}
+
+exports.findPlayersByIdTeam = (req,res) => {
+  let id = req.params.id;
+  Team.findOne({
+    attributes: {
+      exclude: ['League','Status','createdAt', 'updatedAt']
+    },
+    where: {
+      id,
+      Status: '1'
+    }
+  }).then(team =>{
+    if(!team){
+      return sendResponse(res, 'false', '404', {}, `Not found. Team with id ${id}`);
+    }
+    return Athlete.findAll({
+      include: [{
+        model: models.User,
+        as: 'Id User',
+        attributes: {          
+            exclude: ['id','Email','Path','Password','UserType','createdAt', 'updatedAt','Status']
+        }
+      }],
+      attributes: {
+        exclude: ['BirthDate','User','Team','Status','createdAt', 'updatedAt']
+      },
+      where: {
+        Team: id,
+        Status: 1
+      }
+    }).then(players =>{
+      const ObjPlayer = {
+        team,
+        players: players
+      }
+      sendResponse(res, 'true', '200', ObjPlayer);
+    }).catch(err => {
+      const message = err.message ||  "Error looking with IdTeam " + id;
+      sendResponse(res, 'false', '400', {},message);
+    });
+  }).catch((err) => {
+    sendResponse(res, 'false', '400', {}, 'Error in route', err.message);
   });
 }
 
