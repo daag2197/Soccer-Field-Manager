@@ -11,7 +11,7 @@ const MatchDetail = models.MatchDetail;
 exports.create = function (req, res) {
   const body = req.body;
   const match = Match.build(body);
-  match.saver().then((m) => {
+  match.save().then((m) => {
     sendResponse(res, 'true', '200', m);
   }).catch((err) => {
     sendResponse(res, 'false', '400', {}, 'No pudo crearse el partido.', err.message);
