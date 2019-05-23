@@ -4,7 +4,7 @@ var Team = models.Team;
 var Athlete = models.Athlete;
 var User = models.User;
 
-const _ = require("lodash");
+
 const { sendResponse } = require('../services/responseHandler');
 
 
@@ -56,7 +56,7 @@ exports.findAll = (req, res) => {
       }
   }).then(teams => {
     if(teams == ""){
-      sendResponse(res, 'false', '404', {}, `Not found. Teams`);
+      sendResponse(res, 'false', '404', {}, 'No hay equipos registrados');
     }
     else{
       sendResponse(res, 'true', '200', teams);

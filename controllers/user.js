@@ -23,10 +23,18 @@ const userDetail = (id) => {
       Status: '1'
     }
   }).then((u) => {
-    return {
-      status: true,
-      data: u
+    if (u) {
+      return {
+        status: true,
+        data: u
+      }
+    } else {
+      return {
+        status: false,
+        data: 'Usuario no encontrado'
+      }
     }
+    
   }).catch((err) => {
     return {
       status: false,

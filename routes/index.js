@@ -14,6 +14,7 @@ const AthletesRoute = require('./athlete');
 const MatchEventRoute = require('./matchevent');
 const Match = require('./match');
 const MatchDetail = require('./matchdetail');
+const Tournament = require('./tournament');
 
 const userController = require('../controllers/user');
 
@@ -34,6 +35,7 @@ router.use('/athlete',AthletesRoute);
 router.use('/matchevent',MatchEventRoute);
 router.use('/match',Match);
 router.use('/matchdetail',MatchDetail);
+router.use('/tournament', Tournament);
 
 router.post('/login', userController.login);
 
