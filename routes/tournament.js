@@ -13,9 +13,9 @@ Routes.get('/', Tournament.findAll);
 Routes.get('/:id', Tournament.findOne);
 
 // //Update
-// Routes.put('/:id', Tournament.update);
+Routes.put('/:id', Tournament.update);
 
 // //Delete
-// Routes.put('/delete/:id', Tournament.delete);
+Routes.put('/delete/:id', Tournament.delete);
 
 module.exports = Routes;

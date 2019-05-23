@@ -101,3 +101,68 @@ exports.findAll = async (req, res) => {
     sendResponse(res, 'false', '400', {}, 'error al crear el torneo', err.message);
   });
 };
+
+exports.update = async (req,res) => {
+  let id = req.params.id;
+  return Tournament.findOne({
+    where :{
+      Status: '1',
+      id
+    }
+  }).then(tournament => {
+    if(!tournament){
+      return sendResponse(res, 'false', '404', {}, `Not found. Tournament with id ${id}`);
+    }
+    return Tournament.update({
+      Name: req.body.Name
+    },
+    {
+      where :{
+        Status: '1',
+        id
+      }
+    }).then(result => {
+      const message = `Update Correct with id ${id}`
+      sendResponse(res, 'true', '200',message);
+    }).catch(err => {
+      const message = err.message || "Error updating tournament with id " + id;
+      sendResponse(res, 'false', '400', {},message);
+    });
+  }).catch(err => {
+    const message = err.message || "Error updating tournament with id " + id;
+    sendResponse(res, 'false', '400', {},message);
+  });
+}
+
+exports.delete = async (req,res) => {
+  let id = req.params.id;
+  return Tournament.findOne({
+    where :{
+      Status: '1',
+      id
+    }
+  }).then(tournament => {
+    if(!tournament){
+      return sendResponse(res, 'false', '404', {}, `Not found. Tournament with id ${id}`);
+    }
+    return Tournament.update({
+      Status: '0'
+    },
+    {
+      where :{
+        Status: '1',
+        id
+      }
+    }).then(result => {
+      const message = `delete Correct with id ${id}`
+      sendResponse(res, 'true', '200',message);
+    }).catch(err => {
+      const message = err.message || "Error deleting tournament with id " + id;
+      sendResponse(res, 'false', '400', {},message);
+    });
+  }).catch(err => {
+    const message = err.message || "Error deleting tournament with id " + id;
+    sendResponse(res, 'false', '400', {},message);
+  });
+}
+
