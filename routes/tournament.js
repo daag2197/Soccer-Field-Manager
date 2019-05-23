@@ -7,7 +7,7 @@ const Routes = express.Router();
 Routes.post('/', Tournament.create);
 
 //Show all
-// Routes.get('/findall', Tournament.findAll);
+Routes.get('/', Tournament.findAll);
 
 // //Search One
 Routes.get('/:id', Tournament.findOne);
@@ -17,8 +17,5 @@ Routes.get('/:id', Tournament.findOne);
 
 // //Delete
 // Routes.put('/delete/:id', Tournament.delete);
-
-// //Recovery
-// Routes.put('/recovery/:id', Tournament.recovery);
 
 module.exports = Routes;
