@@ -1,34 +1,28 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Tournaments', {
+    return queryInterface.createTable('TournamentDetails', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Name: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      IdLeague: {
+      Tournament: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Leagues',
+          model: 'Tournaments',
           key: 'id'
         }
       },
-      Season: {
+      Team: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        defaultValue: '0',
-      },
-      Phase: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: '0',
+        references: {
+          model: 'Teams',
+          key: 'id'
+        }
       },
       Status: {
         allowNull: false,
@@ -46,6 +40,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Tournaments');
+    return queryInterface.dropTable('TournamentDetails');
   }
 };

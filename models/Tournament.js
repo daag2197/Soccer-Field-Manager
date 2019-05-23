@@ -1,12 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Tournament = sequelize.define('Tournament', {
-    League: DataTypes.INTEGER,
+    Name: DataTypes.STRING,
+    IdLeague: DataTypes.INTEGER,
+    Season: DataTypes.INTEGER,
+    Phase: DataTypes.INTEGER,
     Status: DataTypes.BOOLEAN
   }, {});
   Tournament.associate = function(models) {
     // associations can be defined here
-    Tournament.belongsTo(models.League,{ as:'idLeague', foreignKey: 'League' });
+    Tournament.belongsTo(models.League,{ as:'idLeague', foreignKey: 'IdLeague' });
+    Tournament.hasMany(models.TournamentDetails,{ foreignKey: 'Tournament'});
   };
   return Tournament;
 };
