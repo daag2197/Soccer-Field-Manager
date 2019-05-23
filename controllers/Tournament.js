@@ -75,8 +75,29 @@ exports.findOne = async (req, res) => {
       as: 'idLeague',
     }],
   }).then((tournament) => {
+    if (!tournament)
+      sendResponse(res, 'false', '404', {}, 'No se pudo obtener el torneo', err.message);
     sendResponse(res, 'true', '200', tournament);
   }).catch((err) => {
-    sendResponse(res, 'false', '400', {}, 'error al crear el torneo', err.message);
+    sendResponse(res, 'false', '400', {}, 'error al obtener el torneo', err.message);
   })
-}
+};
+
+exports.findAll = async (req, res) => {
+  return Tournament.findAll({
+    include: [{
+      model: models.TournamentDetails,
+      include: [{
+        model: models.Team,
+        as: 'idTeam',
+      }]
+    }, {
+      model: models.League,
+      as: 'idLeague',
+    }],
+  }).then((arr) => {
+    sendResponse(res, 'true', '200', arr);
+  }).catch((err) => {
+    sendResponse(res, 'false', '400', {}, 'error al crear el torneo', err.message);
+  });
+};
