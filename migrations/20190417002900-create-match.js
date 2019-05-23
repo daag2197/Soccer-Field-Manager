@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       Field: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'Fields',
@@ -41,7 +41,7 @@ module.exports = {
         }
       },
       Referee: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -61,11 +61,11 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       GameDay: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE
       },
       StartGame: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.TIME
       },
       EndGame: {

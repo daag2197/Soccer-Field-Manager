@@ -8,6 +8,7 @@ const TournamentDetails = models.TournamentDetails;
 const League = models.League;
 const Season = models.Season;
 const Team = models.Team;
+const Match = models.Match;
 
 
 const bulkInsert = async (res, teams, Tournament) => {
@@ -47,7 +48,7 @@ exports.create = async (req, res) => {
   const reqTeams = body.teams;
   const idLeague = reqTournament.IdLeague;
 
-  if (reqTeams.length > 5) {
+  if (reqTeams.length >= 5) {
     myTournament = {};
     tournament = Tournament.build({
       Name: reqTournament.Name,
@@ -122,40 +123,44 @@ exports.update = async (req, res) => {
   const reqTournament = body.tournament;
   const reqTeams = body.teams;
 
-  return Tournament.findOne({
-    where: {
-      Status: '1',
-      id,
-    },
-  }).then(tournament => {
-    if (!tournament) {
-      return sendResponse(res, 'false', '404', {}, `Not found. Tournament with id ${id}`);
-    }
-    return Tournament.update({
-      Name: reqTournament.Name
-    },
-      {
-        where: {
-          Status: '1',
-          id
-        }
-      }).then(async (result) => {
-        await TournamentDetails.destroy({
-          where: { Tournament: id },
-        }).then(async () => {
-          tournament.Name = reqTournament.Name;
-          await bulkInsert(res, reqTeams, tournament);
-        }).catch((err) => {
-          sendResponse(res, 'false', '400', {}, 'Error al actualizar', err.message);
-        })
-      }).catch(err => {
-        const message = err.message || "Error updating tournament with id " + id;
-        sendResponse(res, 'false', '400', {}, message);
-      });
-  }).catch(err => {
-    const message = err.message || "Error updating tournament with id " + id;
-    sendResponse(res, 'false', '400', {}, message);
-  });
+  if (reqTeams.length >= 5) {
+    return Tournament.findOne({
+      where: {
+        Status: '1',
+        id,
+      },
+    }).then(tournament => {
+      if (!tournament) {
+        return sendResponse(res, 'false', '404', {}, `Not found. Tournament with id ${id}`);
+      }
+      return Tournament.update({
+        Name: reqTournament.Name
+      },
+        {
+          where: {
+            Status: '1',
+            id
+          }
+        }).then(async (result) => {
+          await TournamentDetails.destroy({
+            where: { Tournament: id },
+          }).then(async () => {
+            tournament.Name = reqTournament.Name;
+            await bulkInsert(res, reqTeams, tournament);
+          }).catch((err) => {
+            sendResponse(res, 'false', '400', {}, 'Error al actualizar', err.message);
+          })
+        }).catch(err => {
+          const message = err.message || "Error updating tournament with id " + id;
+          sendResponse(res, 'false', '400', {}, message);
+        });
+    }).catch(err => {
+      const message = err.message || "Error updating tournament with id " + id;
+      sendResponse(res, 'false', '400', {}, message);
+    });
+  } else {
+    sendResponse(res, 'false', '400', {}, 'El mínimo de equipos no se cumplió', 'El minimo de equipos no se cumplió');
+  }
 }
 
 exports.delete = async (req, res) => {
@@ -190,3 +195,67 @@ exports.delete = async (req, res) => {
   });
 }
 
+const setArray = async (teams) => {
+  let arr = [];
+  for (let team of teams) {
+    arr.push(team.Team);
+  }
+  if (arr.length % 2 != 0)
+    arr.push(-1);
+  return arr;
+};
+
+const makeSeason = (tournament, arr, it) => {
+  season = Season.build({
+    Tournament: tournament,
+    SeasonName: `Jornada ${it}`,
+    Status: 1,
+  });
+  season.save().then(async (sea) => {
+    let length = arr.length-1;
+    for (let i = 0; i < (arr.length/2); i ++) {
+      Match.create({
+        Season: sea.id,
+        Local: arr[i],
+        Guest: arr[length-i],
+        IsDraw: 0,
+        Status: 1,
+      }).then((match) => {
+        console.log('ok');
+      }).catch((err) => {
+        console.log('cannot create', err.message);
+      });
+    }
+  }).catch((err) => {
+    console.log('cannot create', err.message);
+  })
+};
+
+exports.roundRobin = async(req, res) => {
+  TournamentDetails.findAll({
+    where: { Tournament: req.params.id },
+  }).then(async(teams) => {
+    let principal = await setArray(teams);
+    if(teams.length < 5)
+      sendResponse(res, 'false', '400', {}, 'Validar el mínimo de equipos', 'Error con el mínimo');
+
+    total = teams.length;
+    if (teams.length % 2 == 0)
+      total --;
+    
+    for (let i = 1; i <= total; i ++) {
+      const seasonsMake = makeSeason(req.params.id, principal, i)
+      const make = await seasonsMake;
+      let auxend = await principal[principal.length-1]
+      await principal.splice(1, 0, auxend);
+      await principal.pop();
+      console.log('#######', principal);
+      if(i == total){
+        sendResponse(res, 'true', '200', {})
+      }
+    }
+
+  }).catch((err) => {
+    sendResponse(res, 'false', '400', {}, 'Error, por favor vuelve a intentarlo' ,err.message);
+  })
+}

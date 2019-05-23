@@ -12,7 +12,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      IdTournament: {
+      Tournament: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

@@ -15,11 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Match.associate = function(models) {
     // associations can be defined here
-    Match.belongsTo(models.Field, { as: 'IdField',foreignKey: 'Field' });
-    Match.belongsTo(models.Team,{ as: 'IdLocal',foreignKey: 'Local' });
-    Match.belongsTo(models.Team,{ as: 'IdGuest', foreignKey: 'Guest' });
-    Match.belongsTo(models.Team,{ as: 'IdWinner', foreignKey: 'Winner' });
-    Match.belongsTo(models.User,{ as: 'IdReferee', foreignKey: 'Referee' });
+    Match.belongsTo(models.Field, { as: 'IdField', foreignKey: 'Field' });
+    Match.belongsTo(models.Season, { as: 'IdSeason', foreignKey: 'Season' });
+    Match.belongsTo(models.Team, { as: 'IdLocal', foreignKey: 'Local' });
+    Match.belongsTo(models.Team, { as: 'IdGuest', foreignKey: 'Guest' });
+    Match.belongsTo(models.Team, { as: 'IdWinner', foreignKey: 'Winner' });
+    Match.belongsTo(models.User, { as: 'IdReferee', foreignKey: 'Referee' });
     Match.hasMany(models.MatchDetail,{ foreignKey: 'IdMatch' });
   };
   return Match;

@@ -18,4 +18,6 @@ Routes.put('/:id', Tournament.update);
 // //Delete
 Routes.put('/delete/:id', Tournament.delete);
 
+Routes.post('/roundRobin/:id', Tournament.roundRobin);
+
 module.exports = Routes;
