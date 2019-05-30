@@ -36,19 +36,13 @@ exports.findAll = function (req, res) {
           }
         }],
       },
-      {
-        model: models.League,
-        as: 'IdLeague',
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'Complex', 'GameDay', 'Status']
-        },
-        include: [{
-          model: models.Day,
-          attributes: {
-            exclude: ['createdAt', 'updatedAt']
-          }
-        }]
-      },
+      // {
+      //   model: models.Season,
+      //   as: 'IdSeason',
+      //   attributes: {
+      //     exclude: ['createdAt', 'updatedAt', 'Status']
+      //   }
+      // },
       {
         model: models.Team,
         as: 'IdLocal',
@@ -115,19 +109,13 @@ exports.findOne = function (req, res) {
           }
         }],
       },
-      {
-        model: models.League,
-        as: 'IdLeague',
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'Complex', 'GameDay', 'Status']
-        },
-        include: [{
-          model: models.Day,
-          attributes: {
-            exclude: ['createdAt', 'updatedAt']
-          }
-        }]
-      },
+      // {
+      //   model: models.Season,
+      //   as: 'IdSeason',
+      //   attributes: {
+      //     exclude: ['createdAt', 'updatedAt', 'Status']
+      //   }
+      // },
       {
         model: models.Team,
         as: 'IdLocal',
@@ -191,7 +179,6 @@ exports.update = function (req, res) {
     }
     return Match.update({
       Field: req.body.Field,
-      League: req.body.League,
       Local: req.body.Local,
       Guest: req.body.Guest,
       Referee: req.body.Referee,
