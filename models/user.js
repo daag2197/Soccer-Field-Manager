@@ -5,21 +5,20 @@ const jwt = require('../services/JWT');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    FirstName: DataTypes.STRING,
-    LastName: DataTypes.STRING,
-    SecondLastName: DataTypes.STRING,
+    Name: DataTypes.STRING,
+    Surname: DataTypes.STRING,
     Email: DataTypes.STRING,
     Password: DataTypes.STRING,
-    UserType: DataTypes.INTEGER,
+    IdProfile: DataTypes.INTEGER,
     Path: DataTypes.STRING,
-    Status: DataTypes.BOOLEAN
+    Active: DataTypes.BOOLEAN
   }, {});
   User.associate = function(models) {
     // associations can be defined here
-    User.belongsTo(models.UserType, {as: "User Type",foreignKey: "UserType"});
-    User.hasMany(models.Athlete, {foreignKey: "User"});
-    User.hasMany(models.Match, {foreignKey: 'Referee'});
-    User.hasMany(models.MatchDetail,{foreignKey: 'Player'});
+    User.belongsTo(models.Profile, {
+      as: "profile",
+      foreignKey: "IdProfile"
+    });
   };
 
   // Class method
@@ -46,13 +45,17 @@ module.exports = (sequelize, DataTypes) => {
   // Instance Method
   User.prototype.toJS = function toJS() {
     const user = this;
-    return _.pick(user, ['id', 'FirstName', 'LastName', 'SecondLastName',
-      'Email', 'UserType', 'createdAt']);
+    return _.pick(user, ['id', 'Name', 'Surname',
+      'Email', 'IdProfile', 'createdAt']);
   };
 
   User.prototype.generateAuthToken = function generateAuthToken() {
     const user = this;
-    const token = jwt.sign({ data: { _id: user.id } });
+    const token = jwt.sign({ 
+      data: { 
+        _id: user.id
+      } 
+    });
     return token;
   };
 

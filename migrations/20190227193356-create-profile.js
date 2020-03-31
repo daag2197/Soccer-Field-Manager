@@ -1,28 +1,21 @@
 'use strict';
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Fields', {
+    return queryInterface.createTable('Profiles', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      FieldName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      Complex: {
-        type: Sequelize.INTEGER,
+      Description: {
         allowNull: false,
-        references: {
-          model: 'Complexes',
-          key: 'id'
-        }
+        type: Sequelize.STRING
       },
-      Status: {
+      Active: {
         allowNull: false,
-        defaultValue: '1',
+        defaultValue: true,
         type: Sequelize.BOOLEAN
       },
       createdAt: {
@@ -36,6 +29,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Fields');
+    return queryInterface.dropTable('Profiles');
   }
 };

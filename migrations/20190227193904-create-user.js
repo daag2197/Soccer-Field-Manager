@@ -8,16 +8,12 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      FirstName: {
+      Name: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      LastName: {
+      Surname: {
         allowNull: false,
-        type: Sequelize.STRING
-      },
-      SecondLastName: {
-        allowNull: true,
         type: Sequelize.STRING
       },
       Email: {
@@ -26,13 +22,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       Password: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      UserType: {
+      IdProfile: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'UserTypes',
+          model: 'Profiles',
           key: 'id'
         }
       },
@@ -40,9 +37,9 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING
       },
-      Status: {
+      Active: {
         allowNull: false,
-        defaultValue: '1',
+        defaultValue: true,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

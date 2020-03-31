@@ -6,43 +6,7 @@ const _ = require("lodash");
 const { sendResponse } = require('../services/responseHandler');
 
 
-const userDetail = (id) => {
-  return User.findOne({
-    attributes: {
-      exclude: ["Status", "Password", "UserType"]
-    },
-    include: [{
-      model: models.UserType,
-      as: "User Type",
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "Status"]
-      }
-    }],
-    where: {
-      id,
-      Status: '1'
-    }
-  }).then((u) => {
-    if (u) {
-      return {
-        status: true,
-        data: u
-      }
-    } else {
-      return {
-        status: false,
-        data: 'Usuario no encontrado'
-      }
-    }
-    
-  }).catch((err) => {
-    return {
-      status: false,
-      data: err.message
-    }
-  })
-};
-
+//POST
 exports.create = async (req, res) => {
   const body = req.body;
   const user = User.build(body);
@@ -52,21 +16,21 @@ exports.create = async (req, res) => {
       
       User.findOne({
         attributes: {
-          exclude: ["Status", "Password", "UserType"]
+          exclude: ["Active", "Password", "IdProfile"]
         },
         include: [{
-          model: models.UserType,
-          as: "User Type",
+          model: models.Profile,
+          as: "profile",
           attributes: {
-            exclude: ["createdAt", "updatedAt", "Status"]
+            exclude: ["createdAt", "updatedAt", "Active"]
           }
         }],
         where: {
           id: user.id,
-          Status: '1'
+          Active: true
         }
       }).then((u) => {
-        sendResponse(res, 'true', '200', u);
+        sendResponse(res, 'true', '201', u, 'User Added');
       }).catch((err) => {
         sendResponse(res, 'false', '400', {}, 'Unable to save', err.message);
       })
@@ -76,10 +40,152 @@ exports.create = async (req, res) => {
     });
 };
 
-exports.login = function (req, res) {
-  const body = _.pick(req.body, ['email', 'password']);
+//GET
+exports.find = (req,res) => {
+  let id = req.params.id;
+  if (isNaN(id) && id != undefined) {
+    sendResponse(res, 'false', '400', {}, 'Input a correct type value')
+  } else if (id != undefined || id != null) {
+    //Busqueda de un Elemento
+    returnDetail(req, res, req.params.id);
+  } else {
+    //Paginacion
+    let limit = 8;
+    let str = req.url.split('?')[1];
+    let off = querystring.parse(str);
+    if (off.offset == undefined) {
+      off = 0;
+    } else {
+      off = off.offset * limit;
+    };
+    User.findAll({
+    // User.findAndCountAll({
+    // offset: off, limit,
+      attributes: {
+        exclude: ["Active", "Password", "Profile"]
+      },
+      include: [{
+        model: models.Profile,
+        as: "profile",
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "Active"]
+        }
+      }],
+      where: {
+        Active: true
+      }
+    }).then((users) => {
+      if (users.length == 0) {
+        sendResponse(res, 'false', '404', {}, 'No Content users')
+      } else {
+        sendResponse(res, 'true', '200', users);
+      }
+    }).catch((err) => {
+      sendResponse(res, 'false', '404', {}, 'Cannot retrive information about users.', err.message);
+    });
+  }
+}
+
+//PUT Update will NOT update the status, password and the email.
+exports.update = (req,res) => {
+  let id = req.params.id
+  if (isNaN(id) && id != undefined) {
+    sendResponse(res, 'false', '400', {}, 'Input a correct type value')
+  } else {
+    const body = req.body;
+    const fieldsToExclude = ['id','Password', 'Email', 'Active'];
+    const myFields = Object.keys(User.rawAttributes).filter( s => !fieldsToExclude.includes(s));
+    User.update(body, { 
+      fields: myFields, 
+      where: { 
+        id,
+        Active: true
+      } 
+    }).then( (r) => {
+      if (r) {
+        returnDetail(req, res, req.params.id);
+      } else {
+        sendResponse(res, 'false', '400', {}, 'Error,Canot update user');
+      }
+    }).catch((err) => {
+      sendResponse(res, 'false', '400', {}, 'Error,Canot update user', err.message);
+    });
+  }
+}
+
+//DELETE
+exports.delete = (req,res) => {
+  let id = req.params.id
+  if (isNaN(id) && id != undefined) {
+    sendResponse(res, 'false', '400', {}, 'Input a correct type value')
+  } else {
+    User.findOne({
+      where: {
+        id,
+        Active: true
+      }
+    }).then(user => {
+      if (!user) {
+        return sendResponse(res, 'false', '404', {}, 'No Content User');
+      }
+      return User.update({
+        Active : false
+      },
+        {
+          where: {
+            id
+          }
+        }).then(result => {
+           sendResponse(res, 'true', '204', {}, 'Not Content User')
+        }).catch(err => {
+          sendResponse(res, 'false', '400', {}, "Error removing User", err.message);
+        });
+    }).catch(err => {
+      sendResponse(res, 'false', '400', {}, "Error removing User", err.message);
+    });
+  }
+}
+
+//GET 
+exports.findbyprofile = function (req, res) {
+  let id = req.params.id;
+  let limit = 8;
+  let str = req.url.split('?')[1];
+  let off = querystring.parse(str);
+  if(off.offset == undefined) {
+    off = 0;
+  } else {
+    off = off.offset*limit;
+  };
+  User.findAll({
+  //User.findAndCountAll({
+  // offset: off, limit,
+    attributes: {
+      exclude: ["Active", "Password", "IdProfile"]
+    },
+    include: [{
+      model: models.Profile,
+      as: "profile",
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "Active"]
+      }
+    }],
+    where: {
+      Active: true,
+      IdProfile: id
+    }
+  }).then((users) => {
+      sendResponse(res, 'true', '200', users); 
+    }).catch((err) => {
+      sendResponse(res, 'false', '404', {}, 'Cannot retrive information about users.', err.message);
+    });
+};
+
+//Metodo para logear un usuario
+exports.login = (req, res) => {
+  const body = _.pick(req.body, ['Email', 'Password']);
   let id = 0;
-  User.findByCredentials(body.email, body.password)
+  User.findByCredentials(body.Email, body.Password)
     .then((found) => {
       id = found.id;
       return found.generateAuthToken();
@@ -96,159 +202,53 @@ exports.login = function (req, res) {
     });
 }
 
-exports.findAll = function (req, res) {
-  let limit = 8;
-  let str = req.url.split('?')[1];
-  let off = querystring.parse(str);
-  if(off.offset == undefined) {
-    off = 0;
-  } else {
-    off = off.offset*limit;
-  };
-  // User.findAndCountAll({
-    // offset: off, limit,
-  User.findAll({
-    attributes: {
-      exclude: ["Status", "Password", "UserType"]
-    },
-    include: [{
-      model: models.UserType,
-      as: "User Type",
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "Status"]
-      }
-    }],
-    where: {
-      Status: '1'
-    }
-  }).then((users) => {
-      sendResponse(res, 'true', '200', users); 
-    }).catch((err) => {
-      sendResponse(res, 'false', '404', {}, 'Error al mostrar los usuarios', err.message);
-    });
-};
-
+//Retornar Detalle
 const returnDetail = async (req, res, id) => {
   const data = await userDetail(id);
-  if(data['status']){
+  if (data['status']) {
     sendResponse(res, 'true', '200', data['data']);
   } else {
-    sendResponse(res, 'false', '400', {}, 'Usuario no encontrado', data['data']);
+    sendResponse(res, 'false', '404', {}, 'Not data found', data['data']);
   }
 }
 
-exports.findOne = async (req, res) => {
-  returnDetail(req, res, req.params.id);
-}
-
-// Update will NOT update the status, password and the email.
-exports.update = function(req,res){
-  const body = req.body;
-  const fieldsToExclude = ['Password', 'Email', 'Status'];
-  const myFields = Object.keys(User.rawAttributes).filter( s => !fieldsToExclude.includes(s));
-  User.update(body, { fields: myFields, where: { id: req.params.id, Status: '1' } }).then( (r) => {
-    if (r) {
-      returnDetail(req, res, req.params.id);
-    } else {
-      sendResponse(res, 'false', '400', {}, 'Error, no se pudo actualizar');
-    }
-  }).catch((err) => {
-    sendResponse(res, 'false', '400', {}, err.message);
-  });
-}
-
-exports.delete = function(req,res){
-  let id = req.params.id;
-  User.findOne({
-    where: {
-      id,
-      Status: '1'
-    }
-  }).then(user => {
-    if (!user) {
-      return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${id}`);
-    }
-    return User.update({
-      Status : '0'
-    },
-      {
-        where: {
-          id
-        }
-      }).then(result => {
-        const message = `Remmove with id ${id}`;
-        sendResponse(res, 'true', '200', message);
-      }).catch(err => {
-        const message = err.message || "Error removing user with id " + id;
-        sendResponse(res, 'false', '400', {}, message);
-      });
-  }).catch(err => {
-    const message = err.message || "Error removing user with id " + id;
-    sendResponse(res, 'false', '400', {}, message);
-  });
-}
-
-exports.recovery = function(req,res){
-  let id = req.params.id;
-  User.findOne({
-    where: {
-      id,
-      Status: '0'
-    }
-  }).then(user => {
-    if (!user) {
-     return sendResponse(res, 'false', '404', {}, `Not Found. user with id ${id}`);
-    }
-    return User.update({
-      Status : '1'
-    },
-      {
-        where: {
-          id
-        }
-      }).then(result => {
-        message = `Recover with id ${result}`;
-        sendResponse(res, 'true', '200', message);
-      }).catch(err => {
-        const message = err.message || "Error recovering user with id " + id;
-        sendResponse(res, 'false', '400', {}, message);
-      });
-  }).catch(err => {
-    const message = err.message || "Error recovering user with id " + id;
-    sendResponse(res, 'false', '400', {}, message);
-  });
-}
-
-exports.findbyTypeUser = function (req, res) {
-  let id = req.params.id;
-  let limit = 8;
-  let str = req.url.split('?')[1];
-  let off = querystring.parse(str);
-  if(off.offset == undefined) {
-    off = 0;
-  } else {
-    off = off.offset*limit;
-  };
-  // User.findAndCountAll({
-    // offset: off, limit,
-  User.findAll({
+//Obtener Detalles de Usuario
+const userDetail = (id) => {
+  return User.findOne({
     attributes: {
-      exclude: ["Status", "Password", "UserType"]
+      exclude: ["Active", "Password", "IdProfile"]
     },
     include: [{
-      model: models.UserType,
-      as: "User Type",
+      model: models.Profile,
+      as: "profile",
       attributes: {
-        exclude: ["createdAt", "updatedAt", "Status"]
+        exclude: ["createdAt", "updatedAt", "Active"]
       }
     }],
     where: {
-      Status: '1',
-      UserType: id
+      id,
+      Active: true
     }
-  }).then((users) => {
-      sendResponse(res, 'true', '200', users); 
-    }).catch((err) => {
-      sendResponse(res, 'false', '404', {}, 'Error al mostrar los usuarios', err.message);
-    });
+  }).then((u) => {
+    if (u) {
+      return {
+        code: '200',
+        status: true,
+        data: u
+      }
+    } else {
+      return {
+        code: '404',
+        status: false,
+        data: 'No Content User'
+      }
+    }
+
+  }).catch((err) => {
+    return {
+      code: '400',
+      status: false,
+      data: err.message
+    }
+  })
 };

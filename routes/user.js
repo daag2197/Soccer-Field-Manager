@@ -1,19 +1,20 @@
 const express = require("express");
 const User = require("../controllers/user");
-const { adminAuthenticate, authenticate } = require('../middleware/auth');
+const authenticate = require('../middleware/auth');
 
 const Routes = express.Router();
 
-Routes.post('/', User.create);
+//Ruta a utilizar
 
-Routes.get('/', User.findAll);
-
-Routes.get('/:id', User.findOne);
-
+//GET
+Routes.get('/(:id)?', authenticate, User.find);
+//POST
+Routes.post('/', authenticate, User.create);
+//PUT
 Routes.put('/:id', authenticate, User.update);
-
-Routes.put('/delete/:id', adminAuthenticate, User.delete);
-
-Routes.get('/type/:id', User.findbyTypeUser);
+//DELETE
+Routes.delete('/:id', authenticate, User.delete);
+//GET BY PROFILES
+Routes.get('/profile/:id', authenticate, User.findbyprofile);
 
 module.exports = Routes;

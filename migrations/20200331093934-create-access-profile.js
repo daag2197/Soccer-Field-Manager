@@ -1,45 +1,32 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('TournamentDetails', {
+    return queryInterface.createTable('AccessProfiles', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Tournament: {
+      IdProfile: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Tournaments',
+          model: 'Profiles',
           key: 'id'
         }
       },
-      Team: {
+      IdHostRoute: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'Teams',
+          model: 'HostRoutes',
           key: 'id'
         }
-      },
-      Status: {
-        allowNull: false,
-        defaultValue: '1',
-        type: Sequelize.BOOLEAN
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('TournamentDetails');
+    return queryInterface.dropTable('AccessProfiles');
   }
 };

@@ -1,17 +1,29 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Days', {
+    return queryInterface.createTable('HostRoutes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Days: {
+      Name: {
+        type: Sequelize.STRING
+      },
+      OriginalUrl: {
+        type: Sequelize.STRING
+      },
+      Method: {
+        type: Sequelize.STRING
+      },
+      Host: {
+        type: Sequelize.STRING
+      },
+      Active: {
         allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
+        defaultValue: true,
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -24,6 +36,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Days');
+    return queryInterface.dropTable('HostRoutes');
   }
 };
