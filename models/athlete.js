@@ -1,16 +1,26 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Athlete = sequelize.define('Athlete', {
-    User: DataTypes.INTEGER,
-    BirthDate: DataTypes.DATE,
-    Team: DataTypes.INTEGER,
-    Captain: DataTypes.BOOLEAN,
-    Status: DataTypes.BOOLEAN
-  }, {});
-  Athlete.associate = function(models) {
-    // associations can be defined here
-    Athlete.belongsTo(models.User, {as: 'Id User',foreignKey: "User"});
-    Athlete.belongsTo(models.Team,{as: 'Athlete Team',foreignKey: "Team"});
-  };
-  return Athlete;
+module.exports = (sequelize,DataTypes) => {
+    const Athlete = sequelize.define('Athlete',{
+        IdUser: DataTypes.INTEGER,
+        Birthday: DataTypes.DATEONLY,
+        IdTeam: DataTypes.INTEGER,
+        Captain: DataTypes.BOOLEAN,
+        Active: DataTypes.BOOLEAN
+    },{});
+
+    Athlete.associate = function(models){
+         //Asociación con la tablas
+
+         Athlete.belongsTo(models.Team, {
+             as: "team",
+             foreignKey: "IdTeam"
+         });
+
+         Athlete.belongsTo(models.User, {
+             as: "user",
+             foreignKey: "IdUser"
+         });
+    }
+
+    return Athlete;
 };

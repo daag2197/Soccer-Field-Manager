@@ -1,18 +1,21 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Team = sequelize.define('Team', {
-    TeamName: DataTypes.STRING,
-    League: DataTypes.INTEGER,
-    Status: DataTypes.BOOLEAN
-  }, {});
-  Team.associate = function(models) {
-    // associations can be defined here
-    Team.belongsTo(models.League, { as: 'League Detail',foreignKey: 'League' });
-    Team.hasMany(models.Athlete,{foreignKey: 'Team'});
-    Team.hasMany(models.Match,{foreignKey: 'Local'});
-    Team.hasMany(models.Match,{foreignKey: 'Guest' });
-    Team.hasMany(models.Match,{foreignKey: 'Winner'});
-    Team.hasMany(models.MatchDetail,{foreignKey: 'Team'})
-  };
-  return Team;
+module.exports = (sequelize,DataTypes) => {
+    const Team = sequelize.define('Team',{
+        Name: DataTypes.STRING,
+        IdLeague: DataTypes.STRING,
+        Active: DataTypes.BOOLEAN
+    },{});
+    Team.associate = function (models){
+        //Asociación con la tablas
+
+        Team.belongsTo(models.League,{
+            as: "league",
+            foreignKey: "IdLeague"
+        });
+
+        Team.hasMany(models.Athlete,{
+            foreignKey: "IdTeam"
+        });
+    }
+    return Team;
 };
