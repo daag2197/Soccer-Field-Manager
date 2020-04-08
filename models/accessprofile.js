@@ -1,4 +1,7 @@
 'use strict';
+const model = require("../models/");
+const Host = model.HostRoute;
+
 module.exports = (sequelize, DataTypes) => {
   const AccessProfile = sequelize.define('AccessProfile', {
     id: {
@@ -24,6 +27,27 @@ module.exports = (sequelize, DataTypes) => {
       as: "host",
       foreignKey: "IdHostRoute"
     });
-  };
+  }; 
+
+  AccessProfile.ValidateAdmin = function ValidateAdmin(IdProfile, IdHostRoute) {
+    //Constantes
+    const Access = this;
+
+    Access.findOne({
+      where: {
+        IdProfile: IdProfile,
+        IdHostRoute: IdHostRoute
+      }
+    }).then(Val => {
+      if (Val) {
+        return Val;
+      } else {
+        return false;
+      }
+    }).catch(err => {
+      console.log("Error")
+      return false;
+    });
+  }
   return AccessProfile;
 };

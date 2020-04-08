@@ -5,12 +5,13 @@ const router = Router();
 
 // Cargamos la rutas de los modulos
 const AccessRoute = require('./accessprofile');
+const ClubRoute = require('./club');
 const HostRoute = require('./hostroute');
 const ProfileRoute = require('./profile');
 const UserRoute = require('./user');
 const UserController = require('../controllers/user');
 
-// const ComplexRoute = require('./complex');
+
 // const FieldRoute = require('./field')
 // const DayRoute = require('./day');
 // const LeagueRoute = require('./league');
@@ -30,12 +31,12 @@ router.get('/', (req, res) => {
 
 // Cargamos la rutas de los modulos Ordenado alfabeticamente
 router.use('/access',AccessRoute);
+router.use('/club',ClubRoute);
 router.use('/host',HostRoute)
 router.post('/login',UserController.login);
 router.use('/profile',ProfileRoute);
 router.use('/user',UserRoute);
 
-// router.use('/complex',ComplexRoute);
 // router.use('/field', FieldRoute);
 // router.use('/day',DayRoute);
 // router.use('/league',LeagueRoute);

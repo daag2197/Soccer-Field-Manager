@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       foreignKey: "IdProfile"
     });
+    
     Profile.hasMany(models.AccessProfile,
     {
       foreignKey: "IdProfile"
